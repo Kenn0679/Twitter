@@ -1,6 +1,6 @@
 import { Collection, Db, MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
-import User from '~/models/Schemas/User.schemas';
+import User from '~/models/schemas/User.schemas';
 
 dotenv.config();
 

@@ -1,3 +1,4 @@
+import defaultErrorHandler from './middlewares/error.middleware';
 import express from 'express';
 import usersRouter from './routes/users.route';
 import databaseService from './services/database.services';
@@ -11,6 +12,8 @@ app.use(express.json());
 app.use('/users', usersRouter);
 
 databaseService.connect().catch(console.dir);
+
+app.use(defaultErrorHandler);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

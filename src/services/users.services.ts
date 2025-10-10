@@ -1,6 +1,6 @@
-import User from '~/models/Schemas/User.schemas';
+import User from '~/models/schemas/User.schemas';
 import databaseService from './database.services';
-import { RegisterRequestBody } from '~/models/Schemas/request/user.request';
+import { RegisterRequestBody } from '~/models/requests/user.request';
 import { hashPassword } from '~/utils/crypto';
 import { signToken } from '~/utils/jwt';
 import { TokenType } from '~/constants/enums';

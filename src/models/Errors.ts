@@ -3,28 +3,28 @@ import { USERS_MESSAGES } from '~/constants/messages';
 
 //Record<string, string> => { [key: string]: string }
 type ErrorsType = Record<
-    string,
-    {
-        msg: string;
-        [key: string]: any;
-    }
+  string,
+  {
+    msg: string;
+    [key: string]: any;
+  }
 >;
 
 export class ErrorWithStatus {
-    message: string;
-    status: number;
+  message: string;
+  status: number;
 
-    constructor({ message, status }: { message: string; status: number }) {
-        this.message = message;
-        this.status = status;
-    }
+  constructor({ message, status }: { message: string; status: number }) {
+    this.message = message;
+    this.status = status;
+  }
 }
 
 export class EntityError extends ErrorWithStatus {
-    errors: ErrorsType;
+  errors: ErrorsType;
 
-    constructor({ errors }: { errors: ErrorsType }) {
-        super({ message: USERS_MESSAGES.VALIDATION_ERROR, status: HTTP_STATUS.UNPROCESSABLE_ENTITY });
-        this.errors = errors;
-    }
+  constructor({ errors }: { errors: ErrorsType }) {
+    super({ message: USERS_MESSAGES.VALIDATION_ERROR, status: HTTP_STATUS.UNPROCESSABLE_ENTITY });
+    this.errors = errors;
+  }
 }

@@ -1,5 +1,6 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { TokenType, UserVerifyStatus } from '~/constants/enums';
+import { ParamsDictionary } from 'express-serve-static-core';
 
 export interface LoginRequestBody {
   email: string;
@@ -30,4 +31,41 @@ export interface RefreshTokenRequestBody {
 
 export interface VerifyEmailRequestBody {
   email_verify_token: string;
+}
+
+export interface ForgotPasswordRequestBody {
+  email: string;
+}
+
+export interface VerifyForgotPasswordRequestBody {
+  forgot_password_token: string;
+}
+
+export interface ResetPasswordRequestBody {
+  password: string;
+  confirm_new_password: string;
+  forgot_password_token: string;
+}
+
+export interface UpdateMeRequestBody {
+  name?: string;
+  date_of_birth?: string;
+  bio?: string;
+  location?: string;
+  website?: string;
+  username?: string;
+  avatar?: string;
+  cover_photo?: string;
+}
+
+export interface GetProfileRequestParams extends ParamsDictionary {
+  username: string;
+}
+
+export interface FollowRequestBody {
+  followed_user_id: string;
+}
+
+export interface UnfollowRequestParams extends ParamsDictionary {
+  user_id: string;
 }

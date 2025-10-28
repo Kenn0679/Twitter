@@ -53,6 +53,7 @@ export const USERS_MESSAGES = {
   VERIFY_FORGOT_PASSWORD_TOKEN_SUCCESS: 'Verify forgot password token successfully',
   INVALID_FORGOT_PASSWORD_TOKEN: 'Invalid forgot password token',
   RESET_PASSWORD_SUCCESS: 'Reset password successfully',
+  CHANGE_PASSWORD_SUCCESS: 'Change password successfully',
   GET_ME_SUCCESS: 'Get user info successfully',
   USER_EMAIL_NOT_VERIFIED: 'User email is not verified',
   BIO_MUST_BE_A_STRING: 'Bio must be a string',
@@ -63,6 +64,9 @@ export const USERS_MESSAGES = {
   WEBSITE_CANNOT_EXCEED_200_CHARACTERS: 'Website cannot exceed 200 characters',
   USERNAME_MUST_BE_A_STRING: 'Username must be a string',
   USERNAME_CANNOT_EXCEED_30_CHARACTERS: 'Username cannot exceed 30 characters',
+  USERNAME_IS_INVALID:
+    'Username must be 4-15 characters long, can contain letters, numbers, underscores, and cannot be all numbers',
+  USERNAME_ALREADY_IN_USE: 'Username already in use',
   IMAGE_URL_MUST_BE_A_STRING: 'Image URL must be a string',
   IMAGE_URL_CANNOT_EXCEED_400_CHARACTERS: 'Image URL cannot exceed 400 characters',
   GET_PROFILE_SUCCESS: 'Get profile successfully',
@@ -72,5 +76,6 @@ export const USERS_MESSAGES = {
   FOLLOW_USER_ALREADY_FOLLOWING: 'User is already following the followed user',
   INVALID_FOLLOWED_USER_ID: 'Invalid followed user ID',
   FOLLOW_USER_NOT_FOLLOWING: ' User is not following the followed user',
-  UNFOLLOW_USER_SUCCESS: 'Unfollow user successfully'
+  UNFOLLOW_USER_SUCCESS: 'Unfollow user successfully',
+  GOOGLE_EMAIL_NOT_VERIFIED: 'Google email is not verified'
 } as const;

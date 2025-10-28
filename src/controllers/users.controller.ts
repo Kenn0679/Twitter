@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import usersService from '~/services/users.services';
 import core from 'express-serve-static-core';
 import {
+  ChangePasswordRequestBody,
   FollowRequestBody,
   ForgotPasswordRequestBody,
   GetProfileRequestParams,
@@ -22,6 +23,8 @@ import { USERS_MESSAGES } from '~/constants/messages';
 import databaseService from '~/services/database.services';
 import HTTP_STATUS from '~/constants/httpStatus';
 import { UserVerifyStatus } from '~/constants/enums';
+import { config } from 'dotenv';
+config();
 
 const loginController = async (req: Request<core.ParamsDictionary, any, LoginRequestBody>, res: Response) => {
   const user = req.user as User;
@@ -31,6 +34,13 @@ const loginController = async (req: Request<core.ParamsDictionary, any, LoginReq
     message: USERS_MESSAGES.LOGIN_SUCCESS,
     result
   });
+};
+
+const oauthController = async (req: Request, res: Response) => {
+  const { code } = req.query;
+  const result = await usersService.oauth(code as string);
+  const urlRedirect = `${process.env.CLIENT_REDIRECT_CALLBACK}?access_token=${result.access_token}&refresh_token=${result.refresh_token}&new_user=${result.new_user}%&verify=${result.verify}`;
+  return res.redirect(urlRedirect);
 };
 
 const registerController = async (req: Request<core.ParamsDictionary, any, RegisterRequestBody>, res: Response) => {
@@ -179,6 +189,17 @@ const unfollowController = async (req: Request<UnfollowRequestParams>, res: Resp
   return res.json(result);
 };
 
+const changePasswordController = async (
+  req: Request<core.ParamsDictionary, any, ChangePasswordRequestBody>,
+  res: Response
+) => {
+  const { user_id } = (req as Request).decoded_authorization as TokenPayload;
+  const { password } = req.body;
+
+  const result = await usersService.changePassword(user_id, password);
+  return res.json(result);
+};
+
 export {
   loginController,
   registerController,
@@ -193,5 +214,7 @@ export {
   updateMeController,
   getProfileController,
   followController,
-  unfollowController
+  unfollowController,
+  changePasswordController,
+  oauthController
 };

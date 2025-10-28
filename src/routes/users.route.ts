@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import {
+  changePasswordController,
   followController,
   forgotPasswordController,
   getMeController,
   getProfileController,
   loginController,
   logoutController,
+  oauthController,
   refreshTokenController,
   registerController,
   resendVerifyEmailController,
@@ -28,7 +30,8 @@ import {
   verifiedUserValidator,
   updateMeValidator,
   followValidator,
-  unfollowValidator
+  unfollowValidator,
+  changePasswordValidator
 } from '~/middlewares/users.middlewares';
 import { UpdateMeRequestBody } from '~/models/requests/user.request';
 import { wrapRequestHandler } from '~/utils/handlers';
@@ -36,6 +39,8 @@ import { wrapRequestHandler } from '~/utils/handlers';
 const usersRouter = Router();
 
 usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController));
+
+usersRouter.get('/oauth/google', wrapRequestHandler(oauthController));
 
 usersRouter.post('/register', registerValidator, wrapRequestHandler(registerController));
 
@@ -93,6 +98,14 @@ usersRouter.delete(
   verifiedUserValidator,
   unfollowValidator,
   wrapRequestHandler(unfollowController)
+);
+
+usersRouter.put(
+  '/change-password',
+  accessTokenValidator,
+  verifiedUserValidator,
+  changePasswordValidator,
+  wrapRequestHandler(changePasswordController)
 );
 
 export default usersRouter;

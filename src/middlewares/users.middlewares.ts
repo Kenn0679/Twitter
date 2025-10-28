@@ -6,6 +6,7 @@ import { ObjectId } from 'mongodb';
 import { UserVerifyStatus } from '~/constants/enums';
 import HTTP_STATUS from '~/constants/httpStatus';
 import { USERS_MESSAGES } from '~/constants/messages';
+import { REGEX_USERNAME } from '~/constants/regex';
 import { ErrorWithStatus } from '~/models/Errors';
 import { TokenPayload } from '~/models/requests/user.request';
 import databaseService from '~/services/database.services';
@@ -508,6 +509,17 @@ const updateMeValidator = validate(
         isLength: {
           options: { min: 1, max: 30 },
           errorMessage: USERS_MESSAGES.USERNAME_CANNOT_EXCEED_30_CHARACTERS
+        },
+        custom: {
+          options: async (value: string) => {
+            if (!REGEX_USERNAME.test(value)) {
+              throw new Error(USERS_MESSAGES.USERNAME_IS_INVALID);
+            }
+            const user = await databaseService.users.findOne({ username: value });
+            if (user) {
+              throw new Error(USERS_MESSAGES.USERNAME_ALREADY_IN_USE);
+            }
+          }
         }
       },
       avatar: imageSchema,
@@ -517,16 +529,45 @@ const updateMeValidator = validate(
   )
 );
 
-const followValidator = validate(
+const followValidator = validate(checkSchema({ followed_user_id: userIdSchema }, ['body']));
+
+const unfollowValidator = validate(checkSchema({ user_id: userIdSchema }, ['params']));
+
+const changePasswordValidator = validate(
   checkSchema(
     {
-      followed_user_id: userIdSchema
+      old_password: {
+        ...passwordSchema,
+        custom: {
+          options: async (value: string, { req }) => {
+            const { user_id } = req.decoded_authorization as TokenPayload;
+
+            const user = await databaseService.users.findOne({
+              _id: new ObjectId(user_id)
+            });
+            if (!user) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.USER_NOT_FOUND,
+                status: HTTP_STATUS.NOT_FOUND
+              });
+            }
+
+            const { password } = user;
+            if (password !== hashPassword(value)) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.INVALID_CREDENTIALS,
+                status: HTTP_STATUS.UNAUTHORIZED
+              });
+            }
+          }
+        }
+      },
+      password: passwordSchema,
+      confirm_password: confirmPasswordSchema
     },
     ['body']
   )
 );
-
-const unfollowValidator = validate(checkSchema({ user_id: userIdSchema }, ['params']));
 
 export {
   loginValidator,
@@ -540,5 +581,6 @@ export {
   verifiedUserValidator,
   updateMeValidator,
   followValidator,
-  unfollowValidator
+  unfollowValidator,
+  changePasswordValidator
 };

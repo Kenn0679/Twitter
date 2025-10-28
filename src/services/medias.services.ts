@@ -5,6 +5,7 @@ import { UPLOAD_IMAGE_DIRECTORY } from '~/constants/dir';
 import { getNameFromFullName, handleUploadSingleImage } from '~/utils/File';
 import fs from 'fs';
 import { config } from 'dotenv';
+import { isProduction } from '~/constants/config';
 
 config();
 
@@ -18,11 +19,9 @@ class MediaService {
     fs.unlinkSync(file.filepath);
 
     return {
-      message: 'Upload image successfully',
-      result: {
-        name: `${newName}.jpg`,
-        url: `${process.env.BASE_URL}/uploads/${newName}.jpg`
-      }
+      url: isProduction
+        ? `${process.env.HOST}/static/images/${newName}.jpg`
+        : `${process.env.BASE_URL}/static/images/${newName}.jpg`
     };
   }
 }

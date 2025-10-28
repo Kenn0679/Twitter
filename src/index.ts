@@ -5,6 +5,8 @@ import databaseService from './services/database.services';
 import dotenv from 'dotenv';
 import mediasRouter from './routes/medias.routes';
 import { initFolder } from './utils/File';
+import { UPLOAD_IMAGE_DIRECTORY } from './constants/dir';
+import staticRoutes from './routes/static.routes';
 
 dotenv.config();
 const app = express();
@@ -15,6 +17,7 @@ initFolder();
 app.use(express.json());
 app.use('/users', usersRouter);
 app.use('/medias', mediasRouter);
+app.use('/static', staticRoutes);
 
 databaseService.connect().catch(console.dir);
 

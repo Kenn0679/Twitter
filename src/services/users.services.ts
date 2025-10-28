@@ -136,7 +136,7 @@ class UsersService {
   }
 
   private async getGoogleUserInfo(access_token: string, id_token: string) {
-    const { data } = await axios.get('https://www.googleapis.com/oauth2/v1/userinfo', {
+    const { data } = await axios.get('https://www.googleapis.com/oauth2/v2/userinfo', {
       params: {
         access_token,
         alt: 'json'

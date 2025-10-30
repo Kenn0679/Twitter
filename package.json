@@ -29,6 +29,7 @@
     "express": "^5.1.0",
     "globals": "^16.4.0",
     "lodash": "^4.17.21",
+    "mime": "^4.1.0",
     "minimist": "^1.2.8",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",

@@ -3,7 +3,6 @@ import formidable, { File } from 'formidable';
 import fs from 'fs';
 
 import { UPLOAD_IMAGE_DIRECTORY, UPLOAD_TEMP_DIRECTORY, UPLOAD_VIDEO_DIRECTORY } from '../constants/dir';
-import { get } from 'lodash';
 
 export const initFolder = () => {
   [UPLOAD_IMAGE_DIRECTORY, UPLOAD_TEMP_DIRECTORY, UPLOAD_VIDEO_DIRECTORY].forEach((dir) => {
@@ -47,8 +46,13 @@ export const handleUploadImage = (req: Request) => {
       const images = files.image as File[];
       images.forEach((image) => {
         const extension = getExtension(image.originalFilename as string);
-        fs.renameSync(image.filepath, `${image.filepath}.${extension}`);
+        const newPath = `${image.filepath}.${extension}`;
+
+        fs.renameSync(image.filepath, newPath);
+        image.newFilename = `${image.newFilename}.${extension}`;
+        image.filepath = newPath;
       });
+
       resolve(images);
     });
   });
@@ -61,7 +65,7 @@ export const handleUploadVideo = (req: Request) => {
     maxFiles: 1,
     maxFileSize: 50 * 1024 * 1024, // 50MB
     filter: ({ name, mimetype }) => {
-      const valid = name === 'video' && Boolean(mimetype?.includes('video/'));
+      const valid = name === 'video' && Boolean(mimetype?.includes('mp4') || mimetype?.includes('quicktime'));
       if (!valid) {
         invalidFile = new Error('Invalid file type');
       }

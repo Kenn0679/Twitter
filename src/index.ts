@@ -5,8 +5,8 @@ import databaseService from './services/database.services';
 import dotenv from 'dotenv';
 import mediasRouter from './routes/medias.routes';
 import { initFolder } from './utils/File';
-import { UPLOAD_IMAGE_DIRECTORY } from './constants/dir';
 import staticRoutes from './routes/static.routes';
+import { UPLOAD_VIDEO_DIRECTORY } from './constants/dir';
 
 dotenv.config();
 const app = express();
@@ -18,6 +18,7 @@ app.use(express.json());
 app.use('/users', usersRouter);
 app.use('/medias', mediasRouter);
 app.use('/static', staticRoutes);
+app.use('/static/videos', express.static(UPLOAD_VIDEO_DIRECTORY)); //này để phục vụ video tĩnh bên back, vì stream video thì cần range request nên phải có controller riêng để xử lý
 
 databaseService.connect().catch(console.dir);
 

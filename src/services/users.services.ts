@@ -12,6 +12,7 @@ import { ErrorWithStatus } from '~/models/Errors';
 import HTTP_STATUS from '~/constants/httpStatus';
 import Follower from '~/models/schemas/Follower.schema';
 import axios from 'axios';
+import { verify } from 'crypto';
 
 dotenv.config();
 
@@ -73,12 +74,16 @@ class UsersService {
     return { access_token: new_access_token, refresh_token: new_refresh_token };
   }
 
-  async register(payload: RegisterRequestBody) {
+  async register(payload: RegisterRequestBody, verifyStatus: UserVerifyStatus = UserVerifyStatus.Unverified) {
     const user_id = new ObjectId();
-    const email_verify_token = await this.signEmailVerifyToken({
-      user_id: user_id.toString(),
-      verify: UserVerifyStatus.Unverified
-    });
+
+    let email_verify_token = '';
+    if (verifyStatus === UserVerifyStatus.Unverified) {
+      email_verify_token = await this.signEmailVerifyToken({
+        user_id: user_id.toString(),
+        verify: UserVerifyStatus.Unverified
+      });
+    }
 
     await databaseService.users.insertOne(
       new User({
@@ -87,13 +92,14 @@ class UsersService {
         username: `user${user_id.toString()}`,
         email_verify_token,
         date_of_birth: new Date(payload.date_of_birth),
-        password: hashPassword(payload.password)
+        password: hashPassword(payload.password),
+        verify: verifyStatus
       })
     );
 
     const [access_token, refresh_token] = await this.signToken({
       user_id: user_id.toString(),
-      verify: UserVerifyStatus.Unverified
+      verify: verifyStatus
     });
 
     databaseService.refreshTokens.insertOne(new RefreshToken({ token: refresh_token, user_id: new ObjectId(user_id) }));
@@ -171,7 +177,6 @@ class UsersService {
       email: userInfo.email
     });
 
-    console.log(userInfo);
     if (user) {
       const [access_token, refresh_token] = await this.signToken({ user_id: user._id.toString(), verify: user.verify });
       await databaseService.refreshTokens.insertOne(
@@ -186,15 +191,18 @@ class UsersService {
     } else {
       const password = Math.random().toString(36).substring(2, 15);
 
-      const data = await this.register({
-        email: userInfo.email,
-        name: userInfo.name,
-        date_of_birth: new Date().toISOString(),
-        password,
-        confirm_password: password
-      });
+      const data = await this.register(
+        {
+          email: userInfo.email,
+          name: userInfo.name,
+          date_of_birth: new Date().toISOString(),
+          password,
+          confirm_password: password
+        },
+        UserVerifyStatus.Verified
+      );
 
-      return { ...data, new_user: true, verify: UserVerifyStatus.Unverified };
+      return { ...data, new_user: true, verify: UserVerifyStatus.Verified };
     }
   }
 

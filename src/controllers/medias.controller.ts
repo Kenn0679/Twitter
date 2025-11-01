@@ -5,6 +5,7 @@ import HTTP_STATUS from '~/constants/httpStatus';
 import mediaService from '~/services/medias.services';
 import fs from 'fs';
 import mime from 'mime';
+import { USERS_MESSAGES } from '~/constants/messages';
 
 export const uploadImageController = async (req: Request, res: Response) => {
   const url = await mediaService.handleUploadImage(req);
@@ -67,10 +68,60 @@ export const serveVideosStreamController = (req: Request, res: Response) => {
   videoStream.pipe(res);
 };
 
+export const serveVideosM3u8Controller = (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const filePath = path.resolve(UPLOAD_VIDEO_DIRECTORY, id, 'master.m3u8');
+
+  return res.sendFile(filePath, (err: unknown) => {
+    if (err) {
+      const error = err as Error & { status?: number };
+      console.log(error);
+      res.status(error.status || 404).json({ error: error.message || 'Video not found' });
+    }
+  });
+};
+
+export const serveVideosHLSController = (req: Request, res: Response) => {
+  const { id, v, segment } = req.params;
+
+  const filePath = path.resolve(UPLOAD_VIDEO_DIRECTORY, id, v, segment);
+
+  return res.sendFile(filePath, (err: unknown) => {
+    if (err) {
+      const error = err as Error & { status?: number };
+      console.log(error);
+      res.status(error.status || 404).json({ error: error.message || 'Video not found' });
+    }
+  });
+};
 export const uploadVideoController = async (req: Request, res: Response) => {
   const url = await mediaService.uploadVideo(req);
   res.json({
     message: 'Upload video successfully',
     ...url
+  });
+};
+
+//Ví dụ như youtube
+//giai đoạn 1: upload video lên server (mp4, mov...) người dùng chỉ cần đợi và bảo đảm bước này thành công
+//giai đoạn 2: server xử lý encode video sang HLS (m3u8 + ts segments) (thường sẽ tốn thời gian và do server làm việc này)
+//giai đoạn 3: server trả về đường dẫn để check encode thành công hay chưa
+
+export const uploadVideoHLSController = async (req: Request, res: Response) => {
+  const url = await mediaService.uploadHLSVideo(req);
+  res.json({
+    message: 'Upload video successfully',
+    ...url
+  });
+};
+
+export const videoStatusController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const status = await mediaService.getVideoStatus(id as string);
+  res.json({
+    message: USERS_MESSAGES.GET_VIDEO_STATUS_SUCCESS,
+    status
   });
 };

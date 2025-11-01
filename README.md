@@ -10,7 +10,7 @@
 
 _A comprehensive RESTful API backend for a Twitter-like social media platform_
 
-[🚀 **Quick Start**](#-getting-started) • [📡 **API Docs**](#-api-endpoints) • [🛠️ **Tech Stack**](#️-technologies-used) • [📁 **Project Structure**](#-project-structure)
+[🚀 **Quick Start**](#-getting-started) • [📡 **API Docs**](#-api-endpoints) • [🛠️ **Tech Stack**](#️-technologies-used) • [📁 **Project Structure**](#-project-structure) • [🖥️ **Frontend Client**](https://github.com/Kenn0679/Twitter_Client)
 
 </div>
 

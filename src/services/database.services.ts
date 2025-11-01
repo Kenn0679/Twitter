@@ -1,8 +1,9 @@
 import { Collection, Db, MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
-import User from '~/models/schemas/User.schemas';
+import User from '~/models/schemas/User.schema';
 import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import Follower from '~/models/schemas/Follower.schema';
+import VideoStatusSchema from '~/models/schemas/Video.Status.schema';
 
 dotenv.config();
 
@@ -36,6 +37,10 @@ class DatabaseService {
 
   get followers(): Collection<Follower> {
     return this.db.collection(`${process.env.DB_FOLLOWERS_COLLECTION}`);
+  }
+
+  get videoStatus(): Collection<VideoStatusSchema> {
+    return this.db.collection(`${process.env.DB_VIDEO_STATUS_COLLECTION}`);
   }
 }
 

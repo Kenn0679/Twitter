@@ -77,5 +77,6 @@ export const USERS_MESSAGES = {
   INVALID_FOLLOWED_USER_ID: 'Invalid followed user ID',
   FOLLOW_USER_NOT_FOLLOWING: ' User is not following the followed user',
   UNFOLLOW_USER_SUCCESS: 'Unfollow user successfully',
-  GOOGLE_EMAIL_NOT_VERIFIED: 'Google email is not verified'
+  GOOGLE_EMAIL_NOT_VERIFIED: 'Google email is not verified',
+  GET_VIDEO_STATUS_SUCCESS: 'Get video status successfully'
 } as const;

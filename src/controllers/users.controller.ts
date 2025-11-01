@@ -18,7 +18,7 @@ import {
   VerifyForgotPasswordRequestBody
 } from '~/models/requests/user.request';
 import { ObjectId } from 'mongodb';
-import User from '~/models/schemas/User.schemas';
+import User from '~/models/schemas/User.schema';
 import { USERS_MESSAGES } from '~/constants/messages';
 import databaseService from '~/services/database.services';
 import HTTP_STATUS from '~/constants/httpStatus';

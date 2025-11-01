@@ -7,10 +7,13 @@ import mediasRouter from './routes/medias.routes';
 import { initFolder } from './utils/File';
 import staticRoutes from './routes/static.routes';
 import { UPLOAD_VIDEO_DIRECTORY } from './constants/dir';
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
+
+app.use(cors());
 
 initFolder();
 

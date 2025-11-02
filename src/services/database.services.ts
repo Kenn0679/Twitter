@@ -27,18 +27,41 @@ class DatabaseService {
     }
   }
 
+  async indexUser() {
+    const exist = await this.users.indexExists(['username_1', 'email_1', 'password_1_email_1']);
+    if (exist) return;
+    await this.users.createIndex({ username: 1 }, { unique: true });
+    await this.users.createIndex({ email: 1 }, { unique: true });
+    await this.users.createIndex({ password: 1, email: 1 });
+  }
   get users(): Collection<User> {
     return this.db.collection(`${process.env.DB_USER_COLLECTION}`);
   }
 
+  async indexRefreshToken() {
+    const exist = await this.refreshTokens.indexExists(['token_1', 'exp_1']);
+    if (exist) return;
+    await this.refreshTokens.createIndex({ token: 1 });
+    await this.refreshTokens.createIndex({ exp: 1 }, { expireAfterSeconds: 0 });
+  }
   get refreshTokens(): Collection<RefreshToken> {
     return this.db.collection(`${process.env.DB_REFRESH_TOKEN_COLLECTION}`);
   }
 
+  async indexFollower() {
+    const exist = await this.followers.indexExists('user_id_1_followed_user_id_1');
+    if (exist) return;
+    await this.followers.createIndex({ user_id: 1, followed_user_id: 1 });
+  }
   get followers(): Collection<Follower> {
     return this.db.collection(`${process.env.DB_FOLLOWERS_COLLECTION}`);
   }
 
+  async indexVideoStatus() {
+    const exist = await this.videoStatus.indexExists('name_1');
+    if (exist) return;
+    await this.videoStatus.createIndex({ name: 1 });
+  }
   get videoStatus(): Collection<VideoStatusSchema> {
     return this.db.collection(`${process.env.DB_VIDEO_STATUS_COLLECTION}`);
   }

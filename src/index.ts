@@ -23,7 +23,15 @@ app.use('/medias', mediasRouter);
 app.use('/static', staticRoutes);
 app.use('/static/videos', express.static(UPLOAD_VIDEO_DIRECTORY)); //này để phục vụ video tĩnh bên back, vì stream video thì cần range request nên phải có controller riêng để xử lý
 
-databaseService.connect().catch(console.dir);
+databaseService
+  .connect()
+  .then(() => {
+    databaseService.indexUser();
+    databaseService.indexRefreshToken();
+    databaseService.indexFollower();
+    databaseService.indexVideoStatus();
+  })
+  .catch(console.dir);
 
 app.use(defaultErrorHandler);
 

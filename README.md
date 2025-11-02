@@ -12,6 +12,27 @@ _A comprehensive RESTful API backend for a Twitter-like social media platform_
 
 [🚀 **Quick Start**](#-getting-started) • [📡 **API Docs**](#-api-endpoints) • [🛠️ **Tech Stack**](#️-technologies-used) • [📁 **Project Structure**](#-project-structure) • [🖥️ **Frontend Client**](https://github.com/Kenn0679/Twitter_Client)
 
+---
+
+### 👋 About the Developer
+
+**Hi, I'm Ken!** 👨‍💻
+
+I'm a passionate student developer currently pursuing my studies in software engineering. This Twitter Clone API is my personal project built from the ground up to demonstrate modern backend development practices and full-stack capabilities.
+
+**What drove me to build this:**
+
+- Deep dive into **real-world API architecture**
+- Master **TypeScript**, **Node.js**, and **MongoDB**
+- Implement **scalable video streaming** (HLS & Range requests)
+- Learn **OAuth 2.0**, **JWT authentication**, and **security best practices**
+
+I hope this project inspires fellow developers and serves as a practical reference for building production-ready APIs. Feel free to explore, learn, and contribute! 🚀
+
+**⭐ If you find this project helpful, please consider giving it a star!**
+
+---
+
 </div>
 
 ---

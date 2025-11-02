@@ -8,6 +8,7 @@ import { initFolder } from './utils/File';
 import staticRoutes from './routes/static.routes';
 import { UPLOAD_VIDEO_DIRECTORY } from './constants/dir';
 import cors from 'cors';
+import tweetsRouter from './routes/tweets.routes';
 
 dotenv.config();
 const app = express();
@@ -22,6 +23,7 @@ app.use('/users', usersRouter);
 app.use('/medias', mediasRouter);
 app.use('/static', staticRoutes);
 app.use('/static/videos', express.static(UPLOAD_VIDEO_DIRECTORY)); //này để phục vụ video tĩnh bên back, vì stream video thì cần range request nên phải có controller riêng để xử lý
+app.use('/tweets', tweetsRouter);
 
 databaseService
   .connect()

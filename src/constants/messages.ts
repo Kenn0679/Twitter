@@ -80,3 +80,17 @@ export const USERS_MESSAGES = {
   GOOGLE_EMAIL_NOT_VERIFIED: 'Google email is not verified',
   GET_VIDEO_STATUS_SUCCESS: 'Get video status successfully'
 } as const;
+
+export const TWEET_MESSAGES = {
+  TWEET_CREATED_SUCCESSFULLY: 'Tweet created successfully',
+  TWEET_CONTENT_IS_REQUIRED: 'Tweet content is required',
+  TWEET_CONTENT_MUST_BE_EMPTY: 'Tweet content must be empty',
+  TWEET_TYPE_INVALID: 'Tweet type is invalid',
+  TWEET_NOT_FOUND: 'Tweet not found',
+  TWEET_AUDIENCE_INVALID: 'Tweet audience is invalid',
+  PARENT_ID_MUST_BE_VALID_TWEET_ID: 'Parent ID must be a valid tweet ID',
+  PARENT_ID_MUST_BE_NULL: 'Parent ID must be null',
+  TWEET_HASHTAGS_MUST_BE_STRINGS: 'Tweet hashtags must be an array of strings',
+  TWEET_MENTIONS_MUST_BE_VALID_USER_IDS: 'Tweet mentions must be an array of valid user IDs',
+  TWEET_MEDIAS_MUST_BE_ARRAY_OF_MEDIA_OBJECTS: 'Tweet medias must be an array of media objects'
+};

@@ -5,6 +5,8 @@ import RefreshToken from '~/models/schemas/RefreshToken.schema';
 import Follower from '~/models/schemas/Follower.schema';
 import VideoStatusSchema from '~/models/schemas/Video.Status.schema';
 import Tweet from '~/models/schemas/Tweet.schema';
+import Hashtag from '~/models/schemas/Hashtag.schema';
+import Bookmark from '~/models/schemas/Bookmark.schema';
 
 dotenv.config();
 
@@ -69,6 +71,14 @@ class DatabaseService {
 
   get tweets(): Collection<Tweet> {
     return this.db.collection(`${process.env.DB_TWEETS_COLLECTION}`);
+  }
+
+  get hashtags(): Collection<Hashtag> {
+    return this.db.collection(`${process.env.DB_HASHTAGS_COLLECTION}`);
+  }
+
+  get bookmarks(): Collection<Bookmark> {
+    return this.db.collection(`${process.env.DB_BOOKMARKS_COLLECTION}`);
   }
 }
 

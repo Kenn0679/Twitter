@@ -94,3 +94,9 @@ export const TWEET_MESSAGES = {
   TWEET_MENTIONS_MUST_BE_VALID_USER_IDS: 'Tweet mentions must be an array of valid user IDs',
   TWEET_MEDIAS_MUST_BE_ARRAY_OF_MEDIA_OBJECTS: 'Tweet medias must be an array of media objects'
 };
+
+export const BOOKMARK_MESSAGES = {
+  BOOKMARK_CREATED_SUCCESSFULLY: 'Bookmark created successfully',
+  BOOKMARK_REMOVED_SUCCESSFULLY: 'Bookmark removed successfully',
+  BOOKMARK_NOT_FOUND: 'Bookmark not found'
+};

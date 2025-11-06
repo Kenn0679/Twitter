@@ -96,7 +96,16 @@ export const TWEET_MESSAGES = {
 };
 
 export const BOOKMARK_MESSAGES = {
+  ID_INVALID: 'Bookmark ID is invalid',
   BOOKMARK_CREATED_SUCCESSFULLY: 'Bookmark created successfully',
   BOOKMARK_REMOVED_SUCCESSFULLY: 'Bookmark removed successfully',
-  BOOKMARK_NOT_FOUND: 'Bookmark not found'
+  BOOKMARK_NOT_FOUND: 'Bookmark not found',
+  BOOKMARK_DELETED_SUCCESSFULLY: 'Bookmark deleted successfully'
+};
+
+export const LIKE_MESSAGES = {
+  ID_INVALID: 'Like ID is invalid',
+  LIKE_ADDED_SUCCESSFULLY: 'Like added successfully',
+  LIKE_REMOVED_SUCCESSFULLY: 'Like removed successfully',
+  LIKE_NOT_FOUND: 'Like not found'
 };

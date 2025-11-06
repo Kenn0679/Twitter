@@ -1,4 +1,4 @@
-import User from '~/models/schemas/User.schema';
+import User from '~/models/Schemas/User.schema';
 import databaseService from './database.services';
 import { RegisterRequestBody, UpdateMeRequestBody } from '~/models/requests/user.request';
 import { hashPassword } from '~/utils/crypto';
@@ -6,11 +6,11 @@ import { signToken, verifyToken } from '~/utils/jwt';
 import { TokenType, UserVerifyStatus } from '~/constants/enums';
 import dotenv from 'dotenv';
 import { ObjectId } from 'mongodb';
-import RefreshToken from '~/models/schemas/RefreshToken.schema';
+import RefreshToken from '~/models/Schemas/RefreshToken.schema';
 import { USERS_MESSAGES } from '~/constants/messages';
 import { ErrorWithStatus } from '~/models/Errors';
 import HTTP_STATUS from '~/constants/httpStatus';
-import Follower from '~/models/schemas/Follower.schema';
+import Follower from '~/models/Schemas/Follower.schema';
 import axios from 'axios';
 import { StringValue } from 'ms';
 

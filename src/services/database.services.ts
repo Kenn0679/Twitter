@@ -1,12 +1,13 @@
 import { Collection, Db, MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
-import User from '~/models/schemas/User.schema';
-import RefreshToken from '~/models/schemas/RefreshToken.schema';
-import Follower from '~/models/schemas/Follower.schema';
-import VideoStatusSchema from '~/models/schemas/Video.Status.schema';
-import Tweet from '~/models/schemas/Tweet.schema';
-import Hashtag from '~/models/schemas/Hashtag.schema';
-import Bookmark from '~/models/schemas/Bookmark.schema';
+import User from '~/models/Schemas/User.schema';
+import RefreshToken from '~/models/Schemas/RefreshToken.schema';
+import Follower from '~/models/Schemas/Follower.schema';
+import VideoStatusSchema from '~/models/Schemas/Video.Status.schema';
+import Tweet from '~/models/Schemas/Tweet.schema';
+import Hashtag from '~/models/Schemas/Hashtag.schema';
+import Bookmark from '~/models/Schemas/Bookmark.schema';
+import Like from '~/models/Schemas/Like.schema';
 
 dotenv.config();
 
@@ -79,6 +80,10 @@ class DatabaseService {
 
   get bookmarks(): Collection<Bookmark> {
     return this.db.collection(`${process.env.DB_BOOKMARKS_COLLECTION}`);
+  }
+
+  get likes(): Collection<Like> {
+    return this.db.collection(`${process.env.DB_LIKES_COLLECTION}`);
   }
 }
 

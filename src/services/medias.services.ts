@@ -11,7 +11,7 @@ import { Media } from '~/models/Others';
 import { encodeHLSWithMultipleVideoStreams } from '~/utils/video';
 import fsPromises from 'fs/promises';
 import databaseService from './database.services';
-import VideoStatusSchema from '~/models/schemas/Video.Status.schema';
+import VideoStatusSchema from '~/models/Schemas/Video.Status.schema';
 
 config();
 

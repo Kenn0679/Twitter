@@ -94,7 +94,11 @@ export const TWEET_MESSAGES = {
   TWEET_HASHTAGS_MUST_BE_STRINGS: 'Tweet hashtags must be an array of strings',
   TWEET_MENTIONS_MUST_BE_VALID_USER_IDS: 'Tweet mentions must be an array of valid user IDs',
   TWEET_MEDIAS_MUST_BE_ARRAY_OF_MEDIA_OBJECTS: 'Tweet medias must be an array of media objects',
-  TWEET_FETCHED_SUCCESSFULLY: 'Tweet fetched successfully'
+  TWEET_FETCHED_SUCCESSFULLY: 'Tweet fetched successfully',
+  TWEET_IS_NOT_PUBLIC: 'Tweet is not public',
+  TWEET_DELETED_SUCCESSFULLY: 'Tweet deleted successfully',
+  TWEET_LIKED_SUCCESSFULLY: 'Tweet liked successfully',
+  TWEET_UNLIKED_SUCCESSFULLY: 'Tweet unliked successfully'
 };
 
 export const BOOKMARK_MESSAGES = {

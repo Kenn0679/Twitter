@@ -568,6 +568,17 @@ const changePasswordValidator = validate(
     ['body']
   )
 );
+// middleware này kiểm tra người dùng có đăng nhập rồi hay chưa
+//nếu đăng nhập thì chạy middleware (accessTokenValidator, verifiedUserValidator kiểm tra người dùng hợp lệ)
+const isUserLoginValidator =
+  (middleware: (req: Request, res: Response, next: NextFunction) => void) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.headers.authorization) {
+      middleware(req, res, next);
+    } else {
+      next();
+    }
+  };
 
 export {
   loginValidator,
@@ -582,5 +593,6 @@ export {
   updateMeValidator,
   followValidator,
   unfollowValidator,
-  changePasswordValidator
+  changePasswordValidator,
+  isUserLoginValidator
 };

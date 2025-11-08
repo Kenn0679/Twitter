@@ -173,6 +173,6 @@ export const audienceValidator = wrapRequestHandler(async (req: Request, res: Re
         message: TWEET_MESSAGES.TWEET_IS_NOT_PUBLIC
       });
     }
-    next();
   }
+  next();
 });

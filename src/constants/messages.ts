@@ -98,7 +98,8 @@ export const TWEET_MESSAGES = {
   TWEET_IS_NOT_PUBLIC: 'Tweet is not public',
   TWEET_DELETED_SUCCESSFULLY: 'Tweet deleted successfully',
   TWEET_LIKED_SUCCESSFULLY: 'Tweet liked successfully',
-  TWEET_UNLIKED_SUCCESSFULLY: 'Tweet unliked successfully'
+  TWEET_UNLIKED_SUCCESSFULLY: 'Tweet unliked successfully',
+  TWEET_CHILDREN_FETCHED_SUCCESSFULLY: 'Tweet children fetched successfully'
 };
 
 export const BOOKMARK_MESSAGES = {

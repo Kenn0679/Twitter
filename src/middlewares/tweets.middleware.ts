@@ -1,6 +1,6 @@
 import validate from '~/utils/validation';
 import { NextFunction, Request, Response } from 'express';
-import { checkSchema, ParamSchema } from 'express-validator';
+import { checkSchema } from 'express-validator';
 import { numberEnumToArray } from '~/utils/common';
 import { MediaType, TweetAudience, TweetType, UserVerifyStatus } from '~/constants/enums';
 import { TWEET_MESSAGES, USERS_MESSAGES } from '~/constants/messages';
@@ -101,7 +101,7 @@ export const createTweetValidator = validate(
     medias: {
       isArray: true,
       custom: {
-        options: (value, { req }) => {
+        options: (value) => {
           // Yêu cầu mỗi phần từ trong array là Media Object
           if (
             !value.every((item: any) => {
@@ -204,7 +204,7 @@ export const tweetIdValidator = validate(
                           input: '$tweet_children',
                           as: 'item',
                           cond: {
-                            $eq: ['$$item.type', 1]
+                            $eq: ['$$item.type', TweetType.Retweet]
                           }
                         }
                       }
@@ -215,7 +215,7 @@ export const tweetIdValidator = validate(
                           input: '$tweet_children',
                           as: 'item',
                           cond: {
-                            $eq: ['$$item.type', 2]
+                            $eq: ['$$item.type', TweetType.Comment]
                           }
                         }
                       }
@@ -226,13 +226,10 @@ export const tweetIdValidator = validate(
                           input: '$tweet_children',
                           as: 'item',
                           cond: {
-                            $eq: ['$$item.type', 3]
+                            $eq: ['$$item.type', TweetType.QuoteTweet]
                           }
                         }
                       }
-                    },
-                    views: {
-                      $add: ['$user_views', '$guest_views']
                     }
                   }
                 },
@@ -244,7 +241,6 @@ export const tweetIdValidator = validate(
               ])
               .toArray();
 
-            console.log(tweet);
             if (!tweet) {
               throw new ErrorWithStatus({ message: TWEET_MESSAGES.TWEET_NOT_FOUND, status: 404 });
             }

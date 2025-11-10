@@ -200,7 +200,12 @@ class TweetsService {
         }
       ])
       .toArray();
-    return tweets;
+    const total = await databaseService.tweets.countDocuments({
+      type,
+      parent_id: new ObjectId(tweet_id)
+    });
+    const totalPage = Math.ceil(total / limit);
+    return { tweets, totalPage };
   }
 }
 

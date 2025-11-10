@@ -15,6 +15,5 @@ export const createTweetController = async (
 };
 
 export const getTweetController = async (req: Request<TweetParam>, res: Response) => {
-  const { tweet_id } = req.params;
-  return res.json({ message: TWEET_MESSAGES.TWEET_FETCHED_SUCCESSFULLY });
+  return res.json({ message: TWEET_MESSAGES.TWEET_FETCHED_SUCCESSFULLY, data: (req as Request).tweet });
 };

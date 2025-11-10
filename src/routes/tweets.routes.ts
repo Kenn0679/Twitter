@@ -16,10 +16,10 @@ tweetsRouter.post(
 
 tweetsRouter.get(
   '/:tweet_id',
-  tweetIdValidator,
-  audienceValidator,
   isUserLoginValidator(accessTokenValidator),
   isUserLoginValidator(verifiedUserValidator),
+  tweetIdValidator,
+  audienceValidator,
   wrapRequestHandler(getTweetController)
 );
 

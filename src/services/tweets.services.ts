@@ -58,7 +58,8 @@ class TweetsService {
         returnDocument: 'after',
         projection: {
           guest_views: 1,
-          user_views: 1
+          user_views: 1,
+          updated_at: 1
         }
       }
     );
@@ -66,6 +67,7 @@ class TweetsService {
     return result as {
       guest_views: number;
       user_views: number;
+      updated_at: Date;
     };
   }
 
@@ -73,13 +75,18 @@ class TweetsService {
     tweet_id,
     type,
     limit,
-    page
+    page,
+    user_id
   }: {
     tweet_id: string;
     type: number;
     limit: number;
     page: number;
+    user_id?: string;
   }) {
+    const isLogin = user_id ? { user_views: 1 } : { guest_views: 1 };
+    const date = new Date();
+
     const tweets = await databaseService.tweets
       .aggregate([
         {
@@ -200,10 +207,33 @@ class TweetsService {
         }
       ])
       .toArray();
-    const total = await databaseService.tweets.countDocuments({
-      type,
-      parent_id: new ObjectId(tweet_id)
+
+    const ids = tweets.map((tweet) => tweet._id as ObjectId);
+    const [total] = await Promise.all([
+      await databaseService.tweets.countDocuments({
+        type,
+        parent_id: new ObjectId(tweet_id)
+      }),
+      await databaseService.tweets.updateMany(
+        {
+          _id: { $in: ids }
+        },
+        {
+          $inc: isLogin,
+          $set: { updated_at: date } //vì updateMany không hỗ trợ $currentDate trả về nên dùng $set với date hiện tại
+        }
+      )
+    ]);
+
+    tweets.forEach((tweet) => {
+      tweet.updated_at = date;
+      if (user_id) {
+        tweet.user_views += 1;
+      } else {
+        tweet.guest_views += 1;
+      }
     });
+
     const totalPage = Math.ceil(total / limit);
     return { tweets, totalPage };
   }

@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 
-const wrapRequestHandler = <P>(func: RequestHandler<P>) => {
+const wrapRequestHandler = <P>(func: RequestHandler<P, any, any, any>) => {
   return async (req: Request<P>, res: Response, next: NextFunction) => {
     // Promise.resolve(func(req, res, next)).catch(next);
     try {

@@ -1,5 +1,5 @@
 import validate from '~/utils/validation';
-import { NextFunction, Request, Response } from 'express';
+import e, { NextFunction, Request, Response } from 'express';
 import { checkSchema } from 'express-validator';
 import { numberEnumToArray } from '~/utils/common';
 import { MediaType, TweetAudience, TweetType, UserVerifyStatus } from '~/constants/enums';
@@ -287,3 +287,32 @@ export const audienceValidator = wrapRequestHandler(async (req: Request, res: Re
   }
   next();
 });
+
+export const getTweetChildrenValidator = validate(
+  checkSchema(
+    {
+      type: {
+        isIn: {
+          options: [tweetType],
+          errorMessage: TWEET_MESSAGES.TWEET_TYPE_INVALID
+        }
+      },
+      limit: {
+        isNumeric: true,
+        custom: {
+          options: async (value) => {
+            const num = Number(value);
+            if (num > 100 || num <= 0) {
+              throw new Error(TWEET_MESSAGES.TWEET_LIMIT_OUT_OF_RANGE);
+            }
+            return true;
+          }
+        }
+      },
+      page: {
+        isNumeric: true
+      }
+    },
+    ['query']
+  )
+);

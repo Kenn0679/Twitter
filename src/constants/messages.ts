@@ -82,6 +82,7 @@ export const USERS_MESSAGES = {
 } as const;
 
 export const TWEET_MESSAGES = {
+  TWEET_LIMIT_OUT_OF_RANGE: 'Tweet limit is out of range',
   TWEET_ID_INVALID: 'Tweet ID is invalid',
   TWEET_CREATED_SUCCESSFULLY: 'Tweet created successfully',
   TWEET_CONTENT_IS_REQUIRED: 'Tweet content is required',

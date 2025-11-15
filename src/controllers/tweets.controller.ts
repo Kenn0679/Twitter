@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import core from 'express-serve-static-core';
-import { update } from 'lodash';
+import core, { ParamsDictionary } from 'express-serve-static-core';
 import { TweetType } from '~/constants/enums';
 import { TWEET_MESSAGES } from '~/constants/messages';
-import { TweetParam, TweetQuery, TweetRequestBody } from '~/models/requests/Tweet.request';
+import { Pagination, TweetParam, TweetQuery, TweetRequestBody } from '~/models/requests/Tweet.request';
 import { TokenPayload } from '~/models/requests/user.request';
 import tweetsService from '~/services/tweets.services';
 
@@ -50,5 +49,24 @@ export const getTweetChildrenController = async (req: Request<TweetParam, any, a
       page,
       total_page: totalPage
     }
+  });
+};
+
+export const getNewsFeedTweetsController = async (
+  req: Request<ParamsDictionary, any, any, Pagination>,
+  res: Response
+) => {
+  const user_id = req.decoded_authorization?.user_id as string;
+  const limit = Number(req.query.limit);
+  const page = Number(req.query.page);
+
+  const result = await tweetsService.getNewsFeedTweets({
+    user_id,
+    limit,
+    page
+  });
+  res.json({
+    message: TWEET_MESSAGES.NEW_FEED_TWEETS_FETCHED_SUCCESSFULLY,
+    data: { ...result, limit, page }
   });
 };

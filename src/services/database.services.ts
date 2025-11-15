@@ -70,6 +70,11 @@ class DatabaseService {
     return this.db.collection(`${process.env.DB_VIDEO_STATUS_COLLECTION}`);
   }
 
+  async indexTweets() {
+    const exist = await this.tweets.indexExists('content_text');
+    if (exist) return;
+    await this.tweets.createIndex({ content: 'text' }, { default_language: 'none' });
+  }
   get tweets(): Collection<Tweet> {
     return this.db.collection(`${process.env.DB_TWEETS_COLLECTION}`);
   }

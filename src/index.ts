@@ -11,6 +11,7 @@ import cors from 'cors';
 import tweetsRouter from './routes/tweets.routes';
 import bookmarksRouter from './routes/bookmarks.routes';
 import likesRouter from './routes/likes.routes';
+import searchRouter from './routes/search.routes';
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ app.use('/static/videos', express.static(UPLOAD_VIDEO_DIRECTORY)); //này để 
 app.use('/tweets', tweetsRouter);
 app.use('/bookmarks', bookmarksRouter);
 app.use('/likes', likesRouter);
+app.use('/search', searchRouter);
 
 databaseService
   .connect()
@@ -36,6 +38,7 @@ databaseService
     databaseService.indexRefreshToken();
     databaseService.indexFollower();
     databaseService.indexVideoStatus();
+    databaseService.indexTweets();
   })
   .catch(console.dir);
 

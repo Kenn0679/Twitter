@@ -100,7 +100,8 @@ export const TWEET_MESSAGES = {
   TWEET_DELETED_SUCCESSFULLY: 'Tweet deleted successfully',
   TWEET_LIKED_SUCCESSFULLY: 'Tweet liked successfully',
   TWEET_UNLIKED_SUCCESSFULLY: 'Tweet unliked successfully',
-  TWEET_CHILDREN_FETCHED_SUCCESSFULLY: 'Tweet children fetched successfully'
+  TWEET_CHILDREN_FETCHED_SUCCESSFULLY: 'Tweet children fetched successfully',
+  NEW_FEED_TWEETS_FETCHED_SUCCESSFULLY: 'New feed tweets fetched successfully'
 };
 
 export const BOOKMARK_MESSAGES = {

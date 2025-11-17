@@ -82,6 +82,11 @@ class DatabaseService {
   get hashtags(): Collection<Hashtag> {
     return this.db.collection(`${process.env.DB_HASHTAGS_COLLECTION}`);
   }
+  async indexHashtags() {
+    const exist = await this.hashtags.indexExists('name_1');
+    if (exist) return;
+    await this.hashtags.createIndex({ name: 'text' }, { unique: true, default_language: 'none' });
+  }
 
   get bookmarks(): Collection<Bookmark> {
     return this.db.collection(`${process.env.DB_BOOKMARKS_COLLECTION}`);

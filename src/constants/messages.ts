@@ -101,7 +101,8 @@ export const TWEET_MESSAGES = {
   TWEET_LIKED_SUCCESSFULLY: 'Tweet liked successfully',
   TWEET_UNLIKED_SUCCESSFULLY: 'Tweet unliked successfully',
   TWEET_CHILDREN_FETCHED_SUCCESSFULLY: 'Tweet children fetched successfully',
-  NEW_FEED_TWEETS_FETCHED_SUCCESSFULLY: 'New feed tweets fetched successfully'
+  NEW_FEED_TWEETS_FETCHED_SUCCESSFULLY: 'New feed tweets fetched successfully',
+  TWEET_PAGE_MUST_BE_GREATER_THAN_ZERO: 'Page number must be greater than zero'
 };
 
 export const BOOKMARK_MESSAGES = {
@@ -117,4 +118,15 @@ export const LIKE_MESSAGES = {
   LIKE_ADDED_SUCCESSFULLY: 'Like added successfully',
   LIKE_REMOVED_SUCCESSFULLY: 'Like removed successfully',
   LIKE_NOT_FOUND: 'Like not found'
+};
+
+export const SEARCH_MESSAGES = {
+  SEARCH_RESULTS_FETCHED_SUCCESSFULLY: 'Search results fetched successfully',
+  CONTENT_MUST_BE_A_STRING: 'Content must be a string',
+  LIMIT_MUST_BE_A_NUMBER: 'Limit must be a number',
+  LIMIT_MUST_BE_BETWEEN_1_AND_100: 'Limit must be between 1 and 100',
+  PAGE_MUST_BE_A_NUMBER: 'Page must be a number',
+  PAGE_MUST_BE_AT_LEAST_1: 'Page must be at least 1',
+  MEDIA_TYPE_INVALID: 'Media type is invalid',
+  PEOPLE_FOLLOW_INVALID: 'People follow parameter is invalid'
 };

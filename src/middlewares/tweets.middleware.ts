@@ -318,7 +318,12 @@ export const paginationValidator = validate(
         }
       },
       page: {
-        isNumeric: true
+        isNumeric: true,
+        toInt: true,
+        isInt: {
+          options: { min: 1 },
+          errorMessage: TWEET_MESSAGES.TWEET_PAGE_MUST_BE_GREATER_THAN_ZERO
+        }
       }
     },
     ['query']

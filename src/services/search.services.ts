@@ -32,7 +32,6 @@ class SearchServices {
       }
     }
     if (people_follow && people_follow === PeopleFollow.Following) {
-      console.log('here in people_following');
       const userId_ObjectID = new ObjectId(user_id);
       const followed_user_ids = await databaseService.followers
         .find(
@@ -48,7 +47,6 @@ class SearchServices {
       const ids = followed_user_ids.map((item) => item.followed_user_id);
       ids.push(userId_ObjectID);
       matchStage['user_id'] = { $in: ids };
-      console.log(ids);
     }
     const [tweets, total] = await Promise.all([
       await databaseService.tweets

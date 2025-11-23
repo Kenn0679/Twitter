@@ -115,7 +115,7 @@ const resendVerifyEmailController = async (req: Request, res: Response) => {
     });
   }
 
-  const result = await usersService.resendVerifyEmail(user_id);
+  const result = await usersService.resendVerifyEmail(user_id, user.email);
   return res.json(result);
 };
 
@@ -123,11 +123,12 @@ const forgotPasswordController = async (
   req: Request<core.ParamsDictionary, any, ForgotPasswordRequestBody>,
   res: Response
 ) => {
-  const { _id, verify } = req.user as User;
+  const { _id, verify, email } = req.user as User;
 
   const result = await usersService.forgotPassword({
     user_id: (_id as ObjectId).toString(),
-    verify: verify
+    verify: verify,
+    user_email: email
   });
 
   return res.json({ result });

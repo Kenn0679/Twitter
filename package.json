@@ -30,6 +30,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "express": "^5.1.0",
     "globals": "^16.5.0",
+    "handlebars": "^4.7.8",
     "lodash": "^4.17.21",
     "mime": "^4.1.0",
     "minimist": "^1.2.8",

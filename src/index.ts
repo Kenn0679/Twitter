@@ -12,6 +12,7 @@ import tweetsRouter from './routes/tweets.routes';
 import bookmarksRouter from './routes/bookmarks.routes';
 import likesRouter from './routes/likes.routes';
 import searchRouter from './routes/search.routes';
+import path from 'path';
 
 dotenv.config();
 const app = express();

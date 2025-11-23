@@ -13,6 +13,8 @@ import HTTP_STATUS from '~/constants/httpStatus';
 import Follower from '~/models/Schemas/Follower.schema';
 import axios from 'axios';
 import { StringValue } from 'ms';
+import { sendVerifyEmail } from '~/utils/email';
+import { renderEmailTemplate } from '~/utils/handlebarsEmail';
 
 dotenv.config();
 
@@ -110,6 +112,12 @@ class UsersService {
         user_id: user_id.toString(),
         verify: UserVerifyStatus.Unverified
       });
+
+      await sendVerifyEmail(
+        payload.email,
+        'Verify your email address',
+        renderEmailTemplate('verify-email', email_verify_token)
+      );
     }
 
     await databaseService.users.insertOne(
@@ -278,9 +286,14 @@ class UsersService {
     };
   }
 
-  async resendVerifyEmail(user_id: string) {
+  async resendVerifyEmail(user_id: string, user_email: string) {
     const email_verify_token = await this.signEmailVerifyToken({ user_id, verify: UserVerifyStatus.Unverified });
-    console.log('resend verify email ne hihi: ', email_verify_token);
+
+    await sendVerifyEmail(
+      user_email,
+      'Verify your email address',
+      renderEmailTemplate('verify-email', email_verify_token)
+    );
 
     await databaseService.users.updateOne(
       { _id: new ObjectId(user_id) },
@@ -298,7 +311,15 @@ class UsersService {
     };
   }
 
-  async forgotPassword({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+  async forgotPassword({
+    user_id,
+    verify,
+    user_email
+  }: {
+    user_id: string;
+    verify: UserVerifyStatus;
+    user_email: string;
+  }) {
     const forgotPasswordToken = await this.signForgotPasswordToken({ user_id, verify });
     await databaseService.users.updateOne(
       { _id: new ObjectId(user_id) },
@@ -310,8 +331,12 @@ class UsersService {
       }
     );
 
-    // Gửi email chứa forgotPasswordToken cho user ở đây (sẽ làm sau)
-    console.log('Forgot password token: ', forgotPasswordToken);
+    await sendVerifyEmail(
+      user_email,
+      'Forgot your password?',
+      renderEmailTemplate('reset-password', forgotPasswordToken)
+    );
+
     return {
       message: USERS_MESSAGES.FORGOT_PASSWORD_EMAIL_SENT_SUCCESSFULLY
     };

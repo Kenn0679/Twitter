@@ -11,7 +11,7 @@ export const emailConfigs = {
     greeting: `Welcome to <strong>${process.env.PROJECT_NAME}</strong>! Let's connect the world together.`,
     message: 'To complete your registration, please verify your email address by clicking the button below.',
     buttonText: 'Verify Email',
-    actionUrl: (token: string) => `${process.env.BASE_URL || 'http://localhost:3000'}/verify-email?token=${token}`,
+    actionUrl: (token: string) => `${process.env.FRONTEND_URL || 'http://localhost:3000'}/verify-email?token=${token}`,
     previewText: 'Verify your email address for your new account.',
     primaryColor: '#1da1f2',
     secondaryColor: '#0a8dff',

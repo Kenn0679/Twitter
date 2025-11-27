@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "npx nodemon --development",
     "build": "rimraf ./dist && tsc && tsc-alias",
+    "postbuild": "copyfiles -u 1 src/templates/*.hbs dist",
     "start": "node dist/index.js --production",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -25,6 +26,7 @@
     "@types/lodash": "^4.17.20",
     "@types/minimist": "^1.2.5",
     "@types/node": "^24.10.1",
+    "copyfiles": "^2.4.1",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
@@ -45,7 +47,9 @@
     "zx": "^8.8.5"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.940.0",
     "@aws-sdk/client-ses": "^3.934.0",
+    "@aws-sdk/lib-storage": "^3.940.0",
     "axios": "^1.13.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",

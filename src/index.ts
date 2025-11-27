@@ -12,11 +12,14 @@ import tweetsRouter from './routes/tweets.routes';
 import bookmarksRouter from './routes/bookmarks.routes';
 import likesRouter from './routes/likes.routes';
 import searchRouter from './routes/search.routes';
-import path from 'path';
+import s3 from './utils/s3';
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+s3;
 
 app.use(cors());
 

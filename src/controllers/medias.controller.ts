@@ -8,7 +8,7 @@ import mime from 'mime';
 import { USERS_MESSAGES } from '~/constants/messages';
 
 export const uploadImageController = async (req: Request, res: Response) => {
-  const url = await mediaService.handleUploadImage(req);
+  const url = await mediaService.uploadImage(req);
   res.json({
     message: 'Upload image successfully',
     ...url

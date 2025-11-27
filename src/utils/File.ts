@@ -39,8 +39,6 @@ export const handleUploadImage = (req: Request) => {
         const ext = getExtension(image.originalFilename || '');
         const newPath = `${image.filepath}.${ext}`;
 
-        console.log(ext + ' ' + newPath);
-
         fs.renameSync(image.filepath, newPath);
         image.newFilename = `${image.newFilename}.${ext}`;
         image.filepath = newPath;

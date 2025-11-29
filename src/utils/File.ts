@@ -1,12 +1,12 @@
 import { Request } from 'express';
 import formidable, { File } from 'formidable';
 import fs from 'fs';
-import { UPLOAD_IMAGE_DIRECTORY, UPLOAD_TEMP_DIRECTORY, UPLOAD_VIDEO_DIRECTORY } from '../constants/dir';
+import { UPLOAD_IMAGE_DIRECTORY, UPLOAD_VIDEO_DIRECTORY } from '../constants/dir';
 import path from 'path';
 import { glob } from 'glob';
 
 export const initFolder = () => {
-  [UPLOAD_IMAGE_DIRECTORY, UPLOAD_TEMP_DIRECTORY, UPLOAD_VIDEO_DIRECTORY].forEach((dir) => {
+  [UPLOAD_IMAGE_DIRECTORY, UPLOAD_VIDEO_DIRECTORY].forEach((dir) => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, {
         recursive: true
@@ -14,10 +14,11 @@ export const initFolder = () => {
     }
   });
 };
+
 export const handleUploadImage = (req: Request) => {
   let invalidFile: Error | null = null;
   const form = formidable({
-    uploadDir: UPLOAD_TEMP_DIRECTORY,
+    uploadDir: UPLOAD_IMAGE_DIRECTORY,
     maxFiles: 4,
     maxFileSize: 5 * 1024 * 1024, // 5MB
     maxTotalFileSize: 20 * 1024 * 1024, // 20MB

@@ -15,6 +15,7 @@ import VideoStatusSchema from '~/models/Schemas/Video.Status.schema';
 import { uploadFileToS3 } from '~/utils/s3';
 import mime from 'mime';
 import { CompleteMultipartUploadCommandOutput } from '@aws-sdk/client-s3';
+import { rimrafSync } from 'rimraf';
 
 config();
 
@@ -49,6 +50,7 @@ class Queue {
     const videoPath = this.items[0];
     const idName = getNameFromFullName(videoPath.split('/').pop() as string);
     try {
+      console.log('Start decoding');
       databaseService.videoStatus.updateOne(
         { name: idName },
         {
@@ -61,7 +63,7 @@ class Queue {
         }
       );
       await encodeHLSWithMultipleVideoStreams(videoPath);
-
+      console.log('Finished decoding');
       this.items.shift();
       await fsPromises.unlink(videoPath);
       const files = await getFiles(path.resolve(UPLOAD_VIDEO_DIRECTORY, idName));
@@ -88,7 +90,7 @@ class Queue {
         }
       );
 
-      await fsPromises.rm(path.resolve(UPLOAD_VIDEO_DIRECTORY, idName), { recursive: true, force: true });
+      rimrafSync(path.resolve(UPLOAD_VIDEO_DIRECTORY, idName));
 
       console.log('success encoding');
     } catch (error) {

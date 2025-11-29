@@ -1,7 +1,7 @@
 import User from '~/models/Schemas/User.schema';
 import databaseService from './database.services';
 import { RegisterRequestBody, UpdateMeRequestBody } from '~/models/requests/user.request';
-import { hashPassword } from '~/utils/crypto';
+import { generateRandomPassword, hashPassword } from '~/utils/crypto';
 import { signToken, verifyToken } from '~/utils/jwt';
 import { TokenType, UserVerifyStatus } from '~/constants/enums';
 import dotenv from 'dotenv';
@@ -233,7 +233,7 @@ class UsersService {
         verify: user.verify
       };
     } else {
-      const password = Math.random().toString(36).substring(2, 15);
+      const password = generateRandomPassword;
 
       const data = await this.register(
         {

@@ -1,8 +1,8 @@
 import { Request } from 'express';
 import path from 'path';
 import sharp from 'sharp';
-import { UPLOAD_IMAGE_DIRECTORY } from '~/constants/dir';
-import { getNameFromFullName, handleUploadImage, handleUploadVideo } from '~/utils/File';
+import { UPLOAD_IMAGE_DIRECTORY, UPLOAD_VIDEO_DIRECTORY } from '~/constants/dir';
+import { getFiles, getNameFromFullName, handleUploadImage, handleUploadVideo } from '~/utils/File';
 import fs from 'fs';
 import { config } from 'dotenv';
 import { isProduction } from '~/constants/config';
@@ -64,6 +64,18 @@ class Queue {
 
       this.items.shift();
       await fsPromises.unlink(videoPath);
+      const files = await getFiles(path.resolve(UPLOAD_VIDEO_DIRECTORY, idName));
+      await Promise.all(
+        files.map(async (filePath) => {
+          //relative path return \\ in windows, need to replace to /
+          await uploadFileToS3({
+            fileName: `videos-hls/${idName}/${path.relative(path.resolve(UPLOAD_VIDEO_DIRECTORY, idName), filePath).replace(/\\/g, '/')}`, // videos-hls/idName/v/segment
+            filePath,
+            contentType: mime.getType(filePath) as string
+          });
+        })
+      );
+
       databaseService.videoStatus.updateOne(
         { name: idName },
         {
@@ -75,6 +87,9 @@ class Queue {
           }
         }
       );
+
+      await fsPromises.rm(path.resolve(UPLOAD_VIDEO_DIRECTORY, idName), { recursive: true, force: true });
+
       console.log('success encoding');
     } catch (error) {
       databaseService.videoStatus
@@ -111,7 +126,7 @@ class MediaService {
         await sharp(file.filepath).jpeg({ quality: 50 }).autoOrient().toFile(newPath);
 
         const resultS3 = await uploadFileToS3({
-          fileName: `${newName}.jpg`,
+          fileName: `images/${newName}.jpg`,
           filePath: newPath,
           contentType: mime.getType(newPath) as string
         });
@@ -129,10 +144,16 @@ class MediaService {
 
   async uploadVideo(req: Request) {
     const files = await handleUploadVideo(req);
+    const result = await uploadFileToS3({
+      fileName: `videos/${files.newFilename}`,
+      filePath: files.filepath,
+      contentType: mime.getType(files.filepath) as string
+    });
+
+    fs.rmSync(path.dirname(files.filepath), { recursive: true, force: true });
+
     return {
-      url: isProduction
-        ? `${process.env.HOST}/static/videos-stream/${files.newFilename}`
-        : `${process.env.BASE_URL}/static/videos-stream/${files.newFilename}`,
+      url: (result as CompleteMultipartUploadCommandOutput).Location as string,
       type: MediaType.Video
     };
   }

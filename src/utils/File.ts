@@ -3,6 +3,7 @@ import formidable, { File } from 'formidable';
 import fs from 'fs';
 import { UPLOAD_IMAGE_DIRECTORY, UPLOAD_TEMP_DIRECTORY, UPLOAD_VIDEO_DIRECTORY } from '../constants/dir';
 import path from 'path';
+import { glob } from 'glob';
 
 export const initFolder = () => {
   [UPLOAD_IMAGE_DIRECTORY, UPLOAD_TEMP_DIRECTORY, UPLOAD_VIDEO_DIRECTORY].forEach((dir) => {
@@ -98,4 +99,49 @@ export const getExtension = (fullName: string) => {
 
 export const getNameFromFullName = (fullName: string) => {
   return path.basename(fullName, path.extname(fullName));
+};
+
+//only return files, no directories
+export const getFiles = async (dir: string) => {
+  const filesInDir = await glob('**/*', {
+    cwd: dir,
+    nodir: true,
+    dot: true,
+    absolute: true
+  });
+
+  return filesInDir;
+};
+
+//otherwise, if you don't want to use glob, you can use this function
+/**
+ *  
+ * @param files
+ *export const getFiles = async (dir: string): Promise<string[]> => {
+  let results: string[] = [];
+  const list = await fs.promises.readdir(dir, { withFileTypes: true });//return array of Dirent
+  for (const dirent of list) {
+    const fullPath = path.resolve(dir, dirent.name);
+    if (dirent.isDirectory()) {
+      results = results.concat(await getFiles(fullPath));//recursive
+    } else {
+      results.push(fullPath);//
+    }
+  }
+  return results;
+}; 
+ * @returns 
+ */
+
+export const readFiles = async (files = []) => {
+  const filesContent = await Promise.all(
+    files.map(async (file) => {
+      const content = await fs.promises.readFile(file, 'utf-8');
+      return {
+        file,
+        content
+      };
+    })
+  );
+  return filesContent;
 };

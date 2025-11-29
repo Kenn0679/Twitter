@@ -1,8 +1,8 @@
-import { S3 } from '@aws-sdk/client-s3';
+import { GetObjectCommand, HeadObjectCommand, S3 } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import { config } from 'dotenv';
+import { Response } from 'express';
 import fs from 'fs';
-import path from 'path';
 
 config();
 
@@ -26,7 +26,7 @@ export const uploadFileToS3 = async ({
   const parallelUploads3 = new Upload({
     client: s3,
     params: {
-      Bucket: 'twitter-clone-ap-southeast-1-kenn-project',
+      Bucket: process.env.BUCKET_NAME as string,
       Key: fileName,
       Body: fs.readFileSync(filePath),
       ContentType: contentType
@@ -53,4 +53,47 @@ export const uploadFileToS3 = async ({
   return parallelUploads3.done();
 };
 
-export default s3;
+export const sendFileFromS3 = async (res: Response, filePath: string) => {
+  try {
+    const data = await s3.getObject({
+      Bucket: process.env.BUCKET_NAME as string,
+      Key: filePath
+    });
+    (data.Body as any).pipe(res);
+  } catch (error) {
+    res.status(404).json({ error: (error as Error).message });
+  }
+};
+export const sendFileFromS3AsStream = async (res: Response, filePath: string, start: number) => {
+  try {
+    const CHUNK_SIZE = 5 * 10 ** 6; // 5MB
+
+    const { ContentLength, ContentType } = await s3.send(
+      new HeadObjectCommand({
+        Bucket: process.env.BUCKET_NAME as string,
+        Key: filePath
+      })
+    );
+
+    const end = Math.min(start + CHUNK_SIZE - 1, ContentLength! - 1);
+    const contentLength = end - start + 1;
+
+    const data = await s3.send(
+      new GetObjectCommand({
+        Bucket: process.env.BUCKET_NAME!,
+        Key: filePath,
+        Range: `bytes=${start}-${end}`
+      })
+    );
+    // Set headers for partial content and streaming with pipeline
+    res.writeHead(206, {
+      'Content-Range': `bytes ${start}-${end}/${ContentLength}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': contentLength,
+      'Content-Type': ContentType || 'video/mp4'
+    });
+    (data.Body as any).pipe(res);
+  } catch (error) {
+    res.status(404).json({ error: (error as Error).message });
+  }
+};

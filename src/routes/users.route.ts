@@ -4,6 +4,7 @@ import {
   followController,
   forgotPasswordController,
   getMeController,
+  getOtherUserController,
   getProfileController,
   loginController,
   logoutController,
@@ -63,6 +64,8 @@ usersRouter.post(
 usersRouter.post('/reset-password', resetPasswordValidator, wrapRequestHandler(resetPasswordController));
 
 usersRouter.get('/me', accessTokenValidator, wrapRequestHandler(getMeController));
+
+usersRouter.get('/other', accessTokenValidator, wrapRequestHandler(getOtherUserController));
 
 usersRouter.patch(
   '/me',

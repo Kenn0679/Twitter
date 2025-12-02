@@ -396,6 +396,36 @@ class UsersService {
     return user;
   }
 
+  async getOtherUser(current_user_id: string, target_user_id?: string) {
+    // Nếu có target_user_id, lấy user đó
+    if (target_user_id) {
+      const user = await databaseService.users.findOne(
+        { _id: new ObjectId(target_user_id) },
+        {
+          projection: {
+            password: 0,
+            email_verify_token: 0,
+            forgot_password_token: 0
+          }
+        }
+      );
+      return user;
+    }
+
+    // Nếu không có, lấy một user khác với current user (user đầu tiên khác)
+    const user = await databaseService.users.findOne(
+      { _id: { $ne: new ObjectId(current_user_id) } },
+      {
+        projection: {
+          password: 0,
+          email_verify_token: 0,
+          forgot_password_token: 0
+        }
+      }
+    );
+    return user;
+  }
+
   async getProfile(username: string) {
     const user = await databaseService.users.findOne(
       { username },

@@ -169,6 +169,30 @@ const updateMeController = async (req: Request<core.ParamsDictionary, any, Updat
   });
 };
 
+const getOtherUserController = async (req: Request, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload;
+  const { user_id: target_user_id } = req.query;
+
+  // Nếu có target_user_id trong query, lấy user đó
+  // Nếu không, lấy user đầu tiên khác với current user
+  const user = await usersService.getOtherUser(user_id, target_user_id as string | undefined);
+
+  if (!user) {
+    return res.status(HTTP_STATUS.NOT_FOUND).json({
+      message: 'User not found'
+    });
+  }
+
+  // Không cho phép chat với chính mình
+  if (user._id.toString() === user_id) {
+    return res.status(HTTP_STATUS.BAD_REQUEST).json({
+      message: 'Cannot chat with yourself'
+    });
+  }
+
+  return res.json(user);
+};
+
 const getProfileController = async (req: Request<GetProfileRequestParams>, res: Response) => {
   const { username } = req.params;
 
@@ -214,6 +238,7 @@ export {
   getMeController,
   updateMeController,
   getProfileController,
+  getOtherUserController,
   followController,
   unfollowController,
   changePasswordController,

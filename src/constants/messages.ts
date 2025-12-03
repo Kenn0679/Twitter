@@ -30,6 +30,7 @@ export const USERS_MESSAGES = {
   LOGIN_SUCCESS: 'Login successfully',
   REGISTER_SUCCESS: 'Register successfully',
   ACCESS_TOKEN_IS_INVALID: 'Access token is invalid',
+  ACCESS_TOKEN_IS_REQUIRED: 'Access token is required',
   REFRESH_TOKEN_IS_INVALID: 'Refresh token is invalid',
   REFRESH_TOKEN_EXPIRED: 'Refresh token has expired',
   USED_REFRESH_TOKEN_OR_NO_LONGER_EXISTS: 'This refresh token has already been used or no longer exists',
@@ -129,4 +130,12 @@ export const SEARCH_MESSAGES = {
   PAGE_MUST_BE_AT_LEAST_1: 'Page must be at least 1',
   MEDIA_TYPE_INVALID: 'Media type is invalid',
   PEOPLE_FOLLOW_INVALID: 'People follow parameter is invalid'
+};
+
+export const CONVERSATION_MESSAGES = {
+  CONVERSATION_NOT_FOUND: 'Conversation not found',
+  MESSAGE_NOT_FOUND: 'Message not found',
+  MESSAGE_SENT_SUCCESSFULLY: 'Message sent successfully',
+  CANNOT_SEND_MESSAGE_TO_YOURSELF: 'Cannot send message to yourself',
+  INVALID_CONVERSATION_ID: 'Invalid conversation ID'
 };

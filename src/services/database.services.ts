@@ -8,6 +8,7 @@ import Tweet from '~/models/Schemas/Tweet.schema';
 import Hashtag from '~/models/Schemas/Hashtag.schema';
 import Bookmark from '~/models/Schemas/Bookmark.schema';
 import Like from '~/models/Schemas/Like.schema';
+import Conversation from '~/models/Schemas/Conversation.schema';
 
 dotenv.config();
 
@@ -94,6 +95,10 @@ class DatabaseService {
 
   get likes(): Collection<Like> {
     return this.db.collection(`${process.env.DB_LIKES_COLLECTION}`);
+  }
+
+  get conversation(): Collection<Conversation> {
+    return this.db.collection(`${process.env.DB_CONVERSATIONS_COLLECTION}`);
   }
 }
 

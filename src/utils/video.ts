@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs/promises';
 
 const MAXIMUM_BITRATE_720P = 5 * 10 ** 6; // 5Mbps
 const MAXIMUM_BITRATE_1080P = 8 * 10 ** 6; // 8Mbps
@@ -95,6 +96,8 @@ const encodeMax720 = async ({
   const { $ } = await import('zx');
   const slash = (await import('slash')).default;
 
+  console.log(`Encoding video to 720p: ${inputPath}`);
+
   const args = [
     '-y',
     '-loglevel',
@@ -106,6 +109,7 @@ const encodeMax720 = async ({
     '-g',
     '48',
     '-crf',
+    '17',
     '-sc_threshold',
     '0',
     '-map',
@@ -144,7 +148,7 @@ const encodeMax720 = async ({
     slash(outputPath)
   );
 
-  await $`ffmpeg ${args}`;
+  await safeFFmpegCommand(args);
   return true;
 };
 
@@ -158,6 +162,8 @@ const encodeMax1080 = async ({
 }: EncodeByResolution) => {
   const { $ } = await import('zx');
   const slash = (await import('slash')).default;
+
+  console.log(`Encoding video to 1080p: ${inputPath}`);
 
   const args = [
     '-y',
@@ -215,7 +221,7 @@ const encodeMax1080 = async ({
     slash(outputPath)
   );
 
-  await $`ffmpeg ${args}`;
+  await safeFFmpegCommand(args);
   return true;
 };
 
@@ -229,6 +235,8 @@ const encodeMax1440 = async ({
 }: EncodeByResolution) => {
   const { $ } = await import('zx');
   const slash = (await import('slash')).default;
+
+  console.log(`Encoding video to 1440p: ${inputPath}`);
 
   const args = [
     '-y',
@@ -292,7 +300,7 @@ const encodeMax1440 = async ({
     slash(outputPath)
   );
 
-  await $`ffmpeg ${args}`;
+  await safeFFmpegCommand(args);
   return true;
 };
 
@@ -306,6 +314,8 @@ const encodeMaxOriginal = async ({
 }: EncodeByResolution) => {
   const { $ } = await import('zx');
   const slash = (await import('slash')).default;
+
+  console.log(`Encoding video to original resolution: ${inputPath}`);
 
   const args = [
     '-y',
@@ -369,11 +379,42 @@ const encodeMaxOriginal = async ({
     slash(outputPath)
   );
 
-  await $`ffmpeg ${args}`;
+  await safeFFmpegCommand(args);
   return true;
 };
 
+const checkFFmpeg = async () => {
+  try {
+    const { $ } = await import('zx');
+    const { stdout } = await $`ffmpeg -version`;
+    console.log('FFmpeg version:', stdout.split('\n')[0]);
+  } catch {
+    throw new Error('FFmpeg is not installed or not found in PATH. Please install FFmpeg and try again.');
+  }
+};
+
+const checkFileExists = async (filePath: string) => {
+  try {
+    await fs.access(filePath);
+  } catch {
+    throw new Error(`File not found: ${filePath}`);
+  }
+};
+
+const safeFFmpegCommand = async (args: string[]) => {
+  try {
+    const { $ } = await import('zx');
+    await $`ffmpeg ${args}`;
+  } catch (error) {
+    console.error('FFmpeg error:', (error as any).stderr || (error as any).message);
+    throw new Error('Video encoding failed. Please check the input file and FFmpeg installation.');
+  }
+};
+
 export const encodeHLSWithMultipleVideoStreams = async (inputPath: string) => {
+  await checkFFmpeg();
+  await checkFileExists(inputPath);
+
   const [bitrate, resolution] = await Promise.all([getBitrate(inputPath), getResolution(inputPath)]);
   const parent_folder = path.join(inputPath, '..');
   const outputSegmentPath = path.join(parent_folder, 'v%v/fileSequence%d.ts');
@@ -392,6 +433,7 @@ export const encodeHLSWithMultipleVideoStreams = async (inputPath: string) => {
   if (resolution.height > 1440) {
     encodeFunc = encodeMaxOriginal;
   }
+  console.log(`Starting encoding process for: ${inputPath}`);
   await encodeFunc({
     bitrate: {
       720: bitrate720,
@@ -405,5 +447,6 @@ export const encodeHLSWithMultipleVideoStreams = async (inputPath: string) => {
     outputSegmentPath,
     resolution
   });
+  console.log(`Encoding completed for: ${inputPath}`);
   return true;
 };

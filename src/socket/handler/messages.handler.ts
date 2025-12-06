@@ -1,4 +1,3 @@
-// src/socket/handlers/message.handler.ts
 import { Socket, Server } from 'socket.io';
 import { ObjectId } from 'mongodb';
 import databaseService from '~/services/database.services';

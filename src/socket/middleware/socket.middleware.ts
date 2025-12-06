@@ -1,28 +1,51 @@
 // src/socket/middleware/auth.middleware.ts
-import { Socket } from 'socket.io';
-import { USERS_MESSAGES } from '~/constants/messages';
-import { verifyToken } from '~/utils/jwt';
+import { Event, ExtendedError, Socket } from 'socket.io';
+import { ErrorWithStatus } from '~/models/Errors';
+import { TokenPayload } from '~/models/requests/user.request';
+import { verifyAccessToken } from '~/utils/common';
 
 export const socketAuthMiddleware = async (socket: Socket, next: (err?: Error) => void) => {
   try {
+    console.log(socket.handshake);
     const token = socket.handshake.headers.authorization?.split(' ')[1];
 
-    if (!token) {
-      return next(new Error(USERS_MESSAGES.ACCESS_TOKEN_IS_REQUIRED));
-    }
-
-    const decoded = await verifyToken({
-      token,
-      secretOrPublicKey: process.env.JWT_ACCESS_SECRET as string
-    });
+    const decoded = await verifyAccessToken(token as string);
 
     // Lưu user_id vào socket data
     socket.data.user_id = decoded.user_id;
-    socket.data.user = decoded;
+    socket.data.user = decoded as TokenPayload;
+    socket.data.auth = token;
 
     next();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    next(new Error(USERS_MESSAGES.ACCESS_TOKEN_IS_INVALID));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return next(
+        new ErrorWithStatus({
+          message: error.message,
+          status: (error as ErrorWithStatus).status
+        })
+      );
+    }
+
+    next(error as Error);
+  }
+};
+
+export const socketAuthorizeEventMiddleware = async (socket: Socket, next: (err?: ExtendedError) => void) => {
+  try {
+    const access_token = socket.data.auth;
+    const result = await verifyAccessToken(access_token as string);
+    console.log(result);
+    next();
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return next(
+        new ErrorWithStatus({
+          message: error.message,
+          status: (error as ErrorWithStatus).status
+        })
+      );
+    }
+    next(error as Error);
   }
 };

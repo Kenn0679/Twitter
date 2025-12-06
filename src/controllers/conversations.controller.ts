@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import { GetConversationParam, GetConversationsByRecipientParam } from '~/models/requests/Conversation.request';
 import conversationsService from '~/services/conversations.services';
 
-export const getConversationsController = async (req: Request, res: Response) => {
+export const getConversationsController = async (req: Request<GetConversationParam>, res: Response) => {
   const { conversationId } = req.params;
   const { limit, page } = req.query;
   const limitNumber = Number(limit) > 0 ? Number(limit) : 20;
@@ -14,7 +15,10 @@ export const getConversationsController = async (req: Request, res: Response) =>
   });
 };
 
-export const getConversationsByRecipientController = async (req: Request, res: Response) => {
+export const getConversationsByRecipientController = async (
+  req: Request<GetConversationsByRecipientParam>,
+  res: Response
+) => {
   const { recipientId } = req.params;
   const { limit, page } = req.query;
   const senderId = req.decoded_authorization?.user_id as string;

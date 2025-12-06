@@ -10,12 +10,11 @@ type ErrorsType = Record<
   }
 >;
 
-export class ErrorWithStatus {
-  message: string;
+export class ErrorWithStatus extends Error {
   status: number;
 
   constructor({ message, status }: { message: string; status: number }) {
-    this.message = message;
+    super(message);
     this.status = status;
   }
 }

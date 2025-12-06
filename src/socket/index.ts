@@ -2,7 +2,7 @@
 import { Server as HttpServer } from 'http';
 import { Server } from 'socket.io';
 import { UserSocket } from './types/socket';
-import { socketAuthMiddleware } from './middleware/socket.middleware';
+import { socketAuthMiddleware, socketAuthorizeEventMiddleware } from './middleware/socket.middleware';
 import { MessageHandler } from './handler/messages.handler';
 import { UserHandler } from './handler/users.handler';
 
@@ -27,6 +27,8 @@ export const initializeSocket = (server: HttpServer) => {
   // Handle connections
   io.on('connection', (socket) => {
     console.log('New socket connection:', socket.id);
+
+    socket.use((_event, next) => socketAuthorizeEventMiddleware(socket, next));
 
     // Handle user connection
     userHandler.handleConnection(socket);

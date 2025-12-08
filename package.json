@@ -50,6 +50,8 @@
     "@aws-sdk/client-s3": "^3.940.0",
     "@aws-sdk/client-ses": "^3.940.0",
     "@aws-sdk/lib-storage": "^3.940.0",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
     "axios": "^1.13.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -62,7 +64,10 @@
     "mongodb": "^7.0.0",
     "nanoid": "^5.1.6",
     "sharp": "^0.34.5",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.8.2"
   },
   "optionalDependencies": {
     "bufferutil": "*",

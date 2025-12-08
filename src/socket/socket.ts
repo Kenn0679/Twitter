@@ -2,7 +2,11 @@
 import { Server as HttpServer } from 'http';
 import { Server } from 'socket.io';
 import { UserSocket } from './types/socket';
-import { socketAuthMiddleware, socketAuthorizeEventMiddleware } from './middleware/socket.middleware';
+import {
+  socketAuthMiddleware,
+  socketAuthorizeEventMiddleware,
+  socketVerifyUserMiddleware
+} from './middleware/socket.middleware';
 import { MessageHandler } from './handler/messages.handler';
 import { UserHandler } from './handler/users.handler';
 
@@ -19,6 +23,7 @@ export const initializeSocket = (server: HttpServer) => {
 
   // Apply authentication middleware
   io.use(socketAuthMiddleware);
+  io.use(socketVerifyUserMiddleware);
 
   // Initialize handlers
   const messageHandler = new MessageHandler(io, users);

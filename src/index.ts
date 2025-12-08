@@ -13,8 +13,22 @@ import bookmarksRouter from './routes/bookmarks.routes';
 import likesRouter from './routes/likes.routes';
 import searchRouter from './routes/search.routes';
 import { createServer } from 'http';
-import { initializeSocket } from './socket';
+import { initializeSocket } from './socket/socket';
 import conversationsRoutes from './routes/conversations.routes';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+
+const options: swaggerJsdoc.Options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'X clone (Twitter API)',
+      version: '1.0.0'
+    }
+  },
+  apis: ['./openapi/*.yaml']
+};
+const openapiSpecification = swaggerJsdoc(options);
 
 dotenv.config();
 const app = express();
@@ -39,6 +53,7 @@ app.use(cors());
 initFolder();
 
 app.use(express.json());
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 app.use('/users', usersRouter);
 app.use('/medias', mediasRouter);
 app.use('/static', staticRoutes);

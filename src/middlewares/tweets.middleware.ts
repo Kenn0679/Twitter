@@ -1,5 +1,5 @@
 import validate from '~/utils/validation';
-import e, { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { checkSchema } from 'express-validator';
 import { numberEnumToArray } from '~/utils/common';
 import { MediaType, TweetAudience, TweetType, UserVerifyStatus } from '~/constants/enums';

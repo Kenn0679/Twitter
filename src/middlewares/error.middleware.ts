@@ -24,6 +24,7 @@ const defaultErrorHandler = (err: any, req: Request, res: Response, next: NextFu
       message: finalError.message,
       errorInfo: omit(finalError, 'stack')
     });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
       message: 'Internal Server Error',

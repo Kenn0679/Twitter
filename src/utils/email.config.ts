@@ -1,3 +1,5 @@
+import envConfig from './envConfig';
+
 /**
  **  EmailConfig:
  * -Định nghĩa tất cả các trường có thể dùng trong một email template.
@@ -67,13 +69,13 @@ const getBaseConfig = (): Partial<EmailConfig> => ({
    *   - Dùng cho các trường chung của mọi email (màu sắc, logo, tên dự án, ...)
    *   - Giúp dễ dàng đổi thông tin dự án mà không cần sửa từng config email.
    */
-  logo: process.env.EMAIL_LOGO_URL || '',
-  projectInitial: process.env.PROJECT_NAME,
-  projectName: process.env.PROJECT_NAME || 'Twitter Clone',
-  primaryColor: process.env.PRIMARY_COLOR || '#1da1f2',
-  secondaryColor: process.env.SECONDARY_COLOR || '#0a8dff',
-  contactEmail: process.env.CONTACT_EMAIL || 'support@example.com',
-  companyAddress: process.env.COMPANY_ADDRESS || '',
+  logo: '',
+  projectInitial: envConfig.projectName,
+  projectName: envConfig.projectName || 'Twitter Clone',
+  primaryColor: '#1da1f2',
+  secondaryColor: '#0a8dff',
+  contactEmail: 'support@example.com',
+  companyAddress: '',
   currentYear: new Date().getFullYear(),
   showButton: true,
   showCode: false,
@@ -83,7 +85,7 @@ const getBaseConfig = (): Partial<EmailConfig> => ({
   showSocialLinks: false,
   showUnsubscribe: false,
   urlLabel: '🔗 Or copy this link:',
-  socialLinks: process.env.SOCIAL_LINKS ? JSON.parse(process.env.SOCIAL_LINKS) : []
+  socialLinks: []
 });
 
 // Helper function để tạo actionUrl
@@ -94,7 +96,7 @@ const getBaseConfig = (): Partial<EmailConfig> => ({
  *   - Giúp bảo mật và cá nhân hóa link cho từng user.
  */
 export const createActionUrl = (path: string, token: string): string => {
-  const baseUrl = process.env.FRONTEND_URL;
+  const baseUrl = envConfig.frontendUrl;
   return `${baseUrl}${path}?token=${token}`;
 };
 
@@ -140,10 +142,10 @@ export const emailConfigs: Record<
     currentYear: getBaseConfig().currentYear || new Date().getFullYear(),
     logo: getBaseConfig().logo,
     title: 'Verify Your Email',
-    previewText: `Welcome to ${process.env.PROJECT_NAME || 'our platform'}! Verify your email to get started.`,
+    previewText: `Welcome to ${envConfig.projectName || 'our platform'}! Verify your email to get started.`,
     heading: '🎉 Welcome Aboard!',
     subheading: "Let's verify your email address",
-    greeting: `Hi there! 👋<br><br>Welcome to <strong>${process.env.PROJECT_NAME || 'our platform'}</strong>! We're excited to have you join our community.`,
+    greeting: `Hi there! 👋<br><br>Welcome to <strong>${envConfig.projectName || 'our platform'}</strong>! We're excited to have you join our community.`,
     message: `To ensure the security of your account and unlock all features, please verify your email address by clicking the button below.<br><br>This helps us keep your account safe and ensures you receive important updates.`,
     showButton: true,
     buttonText: '✓ Verify My Email',
@@ -175,10 +177,10 @@ export const emailConfigs: Record<
     currentYear: getBaseConfig().currentYear || new Date().getFullYear(),
     logo: getBaseConfig().logo,
     title: 'Reset Your Password',
-    previewText: `Password reset requested for your ${process.env.PROJECT_NAME || 'account'}.`,
+    previewText: `Password reset requested for your ${envConfig.projectName || 'account'}.`,
     heading: '🔑 Reset Password',
     subheading: 'Secure your account with a new password',
-    greeting: `Hello!<br><br>We received a request to reset the password for your <strong>${process.env.PROJECT_NAME || 'account'}</strong>.`,
+    greeting: `Hello!<br><br>We received a request to reset the password for your <strong>${envConfig.projectName || 'account'}</strong>.`,
     message: `If you requested this password reset, click the button below to create a new password. If you didn't make this request, you can safely ignore this email – your password will remain unchanged.`,
     showButton: true,
     buttonText: '🔐 Reset Password',

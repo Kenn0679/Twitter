@@ -1,5 +1,4 @@
 import { checkSchema } from 'express-validator';
-import { values } from 'lodash';
 import { ObjectId } from 'mongodb';
 import HTTP_STATUS from '~/constants/httpStatus';
 import { CONVERSATION_MESSAGES, USERS_MESSAGES } from '~/constants/messages';

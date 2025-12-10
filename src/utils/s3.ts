@@ -1,16 +1,14 @@
 import { GetObjectCommand, HeadObjectCommand, S3 } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
-import { config } from 'dotenv';
 import { Response } from 'express';
 import fs from 'fs';
-
-config();
+import envConfig from './envConfig';
 
 const s3 = new S3({
-  region: process.env.AWS_REGION,
+  region: envConfig.awsRegion,
   credentials: {
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string
+    secretAccessKey: envConfig.awsSecretAccessKey,
+    accessKeyId: envConfig.awsAccessKeyId
   }
 });
 
@@ -26,7 +24,7 @@ export const uploadFileToS3 = async ({
   const parallelUploads3 = new Upload({
     client: s3,
     params: {
-      Bucket: process.env.BUCKET_NAME as string,
+      Bucket: envConfig.awsS3BucketName,
       Key: fileName,
       Body: fs.readFileSync(filePath),
       ContentType: contentType
@@ -56,7 +54,7 @@ export const uploadFileToS3 = async ({
 export const sendFileFromS3 = async (res: Response, filePath: string) => {
   try {
     const data = await s3.getObject({
-      Bucket: process.env.BUCKET_NAME as string,
+      Bucket: envConfig.awsS3BucketName,
       Key: filePath
     });
     (data.Body as any).pipe(res);
@@ -70,7 +68,7 @@ export const sendFileFromS3AsStream = async (res: Response, filePath: string, st
 
     const { ContentLength, ContentType } = await s3.send(
       new HeadObjectCommand({
-        Bucket: process.env.BUCKET_NAME as string,
+        Bucket: envConfig.awsS3BucketName,
         Key: filePath
       })
     );
@@ -80,7 +78,7 @@ export const sendFileFromS3AsStream = async (res: Response, filePath: string, st
 
     const data = await s3.send(
       new GetObjectCommand({
-        Bucket: process.env.BUCKET_NAME!,
+        Bucket: envConfig.awsS3BucketName,
         Key: filePath,
         Range: `bytes=${start}-${end}`
       })

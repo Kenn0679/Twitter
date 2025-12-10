@@ -1,5 +1,5 @@
 // src/socket/middleware/auth.middleware.ts
-import { Event, ExtendedError, Socket } from 'socket.io';
+import { ExtendedError, Socket } from 'socket.io';
 import { UserVerifyStatus } from '~/constants/enums';
 import { USERS_MESSAGES } from '~/constants/messages';
 import { ErrorWithStatus } from '~/models/Errors';

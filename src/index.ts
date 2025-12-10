@@ -2,7 +2,6 @@ import defaultErrorHandler from './middlewares/error.middleware';
 import express from 'express';
 import usersRouter from './routes/users.route';
 import databaseService from './services/database.services';
-import dotenv from 'dotenv';
 import mediasRouter from './routes/medias.routes';
 import { initFolder } from './utils/File';
 import staticRoutes from './routes/static.routes';
@@ -17,6 +16,7 @@ import { initializeSocket } from './socket/socket';
 import conversationsRoutes from './routes/conversations.routes';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import envConfig from './utils/envConfig';
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -30,9 +30,8 @@ const options: swaggerJsdoc.Options = {
 };
 const openapiSpecification = swaggerJsdoc(options);
 
-dotenv.config();
 const app = express();
-const PORT = process.env.PORT;
+const PORT = envConfig.port;
 
 const server = createServer(app);
 

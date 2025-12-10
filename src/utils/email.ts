@@ -1,13 +1,11 @@
 import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses';
-import { config } from 'dotenv';
-
-config();
+import envConfig from './envConfig';
 // Create SES service object.
 const sesClient = new SESClient({
-  region: process.env.AWS_REGION,
+  region: envConfig.awsRegion,
   credentials: {
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string
+    secretAccessKey: envConfig.awsSecretAccessKey,
+    accessKeyId: envConfig.awsAccessKeyId
   }
 });
 
@@ -53,7 +51,7 @@ const createSendEmailCommand = ({
 
 const sendVerifyEmail = async (toAddress: string | string[], subject: string, body: string) => {
   const sendEmailCommand = createSendEmailCommand({
-    fromAddress: process.env.SES_FROM_ADDRESS as string,
+    fromAddress: envConfig.sesFromAddress,
     toAddresses: toAddress,
     body,
     subject

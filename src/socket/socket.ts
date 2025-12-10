@@ -9,6 +9,7 @@ import {
 } from './middleware/socket.middleware';
 import { MessageHandler } from './handler/messages.handler';
 import { UserHandler } from './handler/users.handler';
+import envConfig from '~/utils/envConfig';
 
 // Lưu trữ mapping user_id -> socket_id và status
 const users: { [key: string]: UserSocket } = {};
@@ -16,7 +17,7 @@ const users: { [key: string]: UserSocket } = {};
 export const initializeSocket = (server: HttpServer) => {
   const io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+      origin: envConfig.frontendUrl || 'http://localhost:3000',
       methods: ['GET', 'POST']
     }
   });

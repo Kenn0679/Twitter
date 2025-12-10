@@ -1,22 +1,25 @@
 // Email template & config for Twitter Clone
-// This is the template I have uesed in all of my previos projects that needs Email functionality
+// This is the template I have used in all of my previous projects that need Email functionality
 //Can be customized with emailConfigs object below
 //In your env file, make sure to set PROJECT_NAME variable
 //BUT IN THIS PROJECT, WE WILL USE HANDLEBARS TEMPLATE INSTEAD
+
+import envConfig from './envConfig';
+
 //IF YOU DON'T WANT TO USE HANDLEBARS (BECAUSE NEED TO INSTALL MORE DEPENDENCIES), YOU CAN USE THIS FILE
 export const emailConfigs = {
   'verify-email': {
     title: 'Email Verification',
     heading: 'Verify Your Email Address',
-    greeting: `Welcome to <strong>${process.env.PROJECT_NAME}</strong>! Let's connect the world together.`,
+    greeting: `Welcome to <strong>${envConfig.projectName}</strong>! Let's connect the world together.`,
     message: 'To complete your registration, please verify your email address by clicking the button below.',
     buttonText: 'Verify Email',
-    actionUrl: (token: string) => `${process.env.FRONTEND_URL || 'http://localhost:3000'}/verify-email?token=${token}`,
+    actionUrl: (token: string) => `${envConfig.frontendUrl || 'http://localhost:3000'}/verify-email?token=${token}`,
     previewText: 'Verify your email address for your new account.',
     primaryColor: '#1da1f2',
     secondaryColor: '#0a8dff',
     logo: '',
-    projectInitial: process.env.PROJECT_NAME ? process.env.PROJECT_NAME[0] : 'T',
+    projectInitial: envConfig.projectName ? envConfig.projectName[0] : 'T',
     subheading: '',
     showButton: true,
     showCode: false,
@@ -42,21 +45,21 @@ export const emailConfigs = {
     showUnsubscribe: false,
     unsubscribeUrl: '',
     preferencesUrl: '',
-    footerText: `You received this email because you registered for ${process.env.PROJECT_NAME}.<br>If you did not request this, you can safely ignore it.`
+    footerText: `You received this email because you registered for ${envConfig.projectName}.<br>If you did not request this, you can safely ignore it.`
   },
   'reset-password': {
     title: 'Reset Password',
     heading: 'Reset Your Password',
-    greeting: `Hello! We received a request to reset your <strong>${process.env.PROJECT_NAME}</strong> account password.`,
+    greeting: `Hello! We received a request to reset your <strong>${envConfig.projectName}</strong> account password.`,
     message:
       'To reset your password, click the button below. If you did not request a password reset, you can ignore this email.',
     buttonText: 'Reset Password',
-    actionUrl: (token: string) => `${process.env.BASE_URL || 'http://localhost:3000'}/reset-password?token=${token}`,
+    actionUrl: (token: string) => `${envConfig.baseUrl || 'http://localhost:3000'}/reset-password?token=${token}`,
     previewText: 'Reset your password for your account.',
     primaryColor: '#1da1f2',
     secondaryColor: '#0a8dff',
     logo: '',
-    projectInitial: process.env.PROJECT_NAME ? process.env.PROJECT_NAME[0] : 'T',
+    projectInitial: envConfig.projectName ? envConfig.projectName[0] : 'T',
     subheading: '',
     showButton: true,
     showCode: false,
@@ -102,7 +105,7 @@ const generateEmailTemplate = (token: string, purpose: keyof typeof emailConfigs
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${config.title} - ${process.env.PROJECT_NAME}</title>
+    <title>${config.title} - ${envConfig.projectName}</title>
 </head>
 <body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:linear-gradient(135deg,#1DA1F2 0%,#AAB8C2 100%);line-height:1.6;">
     <table role="presentation" style="width:100%;border-collapse:collapse;">
@@ -114,7 +117,7 @@ const generateEmailTemplate = (token: string, purpose: keyof typeof emailConfigs
                             <table role="presentation" style="width:100%;">
                                 <tr>
                                     <td style="padding:48px 48px 56px;text-align:center;">
-                                        <h2 style="margin:0 0 24px;font-family:'Segoe Script','Comic Sans MS',cursive;font-size:42px;font-weight:400;color:#fff;font-style:italic;text-shadow:0 2px 4px rgba(0,0,0,0.1);">${process.env.PROJECT_NAME}</h2>
+                                        <h2 style="margin:0 0 24px;font-family:'Segoe Script','Comic Sans MS',cursive;font-size:42px;font-weight:400;color:#fff;font-style:italic;text-shadow:0 2px 4px rgba(0,0,0,0.1);">${envConfig.projectName}</h2>
                                         <h1 style="margin:0;font-size:32px;font-weight:700;color:#fff;letter-spacing:-0.02em;text-shadow:0 2px 4px rgba(0,0,0,0.1);">${config.heading}</h1>
                                     </td>
                                 </tr>
@@ -161,10 +164,10 @@ const generateEmailTemplate = (token: string, purpose: keyof typeof emailConfigs
                         <td style="padding:40px 48px;background:linear-gradient(135deg,#F3F6F9 0%,#E8EDF2 100%);border-top:1px solid #D1D5DB;">
                             <p style="margin:0 0 20px;font-size:15px;color:#4b5563;text-align:center;line-height:1.6;">
                                 Need help? Contact our team at<br>
-                                <a href="mailto:${process.env.EMAIL_USERNAME || 'support@twitterclone.com'}" style="color:#1DA1F2;text-decoration:none;font-weight:600;">${process.env.EMAIL_USERNAME || 'support@twitterclone.com'}</a>
+                                <a href="mailto:${'support@twitterclone.com'}" style="color:#1DA1F2;text-decoration:none;font-weight:600;">${'support@twitterclone.com'}</a>
                             </p>
                             <p style="margin:0;font-size:13px;color:#9CA3AF;text-align:center;">
-                                © 2025 ${process.env.PROJECT_NAME} - Connect the World
+                                © 2025 ${envConfig.projectName} - Connect the World
                             </p>
                         </td>
                     </tr>

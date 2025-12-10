@@ -93,6 +93,7 @@ const encodeMax720 = async ({
   outputSegmentPath,
   resolution
 }: EncodeByResolution) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { $ } = await import('zx');
   const slash = (await import('slash')).default;
 

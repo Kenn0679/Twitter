@@ -1,5 +1,4 @@
 import { Collection, Db, MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
 import User from '~/models/Schemas/User.schema';
 import RefreshToken from '~/models/Schemas/RefreshToken.schema';
 import Follower from '~/models/Schemas/Follower.schema';
@@ -9,22 +8,21 @@ import Hashtag from '~/models/Schemas/Hashtag.schema';
 import Bookmark from '~/models/Schemas/Bookmark.schema';
 import Like from '~/models/Schemas/Like.schema';
 import Conversation from '~/models/Schemas/Conversation.schema';
+import envConfig from '~/utils/envConfig';
 
-dotenv.config();
-
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@twitter.nuepmhe.mongodb.net/?retryWrites=true&w=majority&appName=Twitter`;
+const uri = `mongodb+srv://${envConfig.dbUser}:${envConfig.dbPass}@twitter.nuepmhe.mongodb.net/?retryWrites=true&w=majority&appName=Twitter`;
 class DatabaseService {
   private client: MongoClient;
   private db: Db;
   constructor() {
     this.client = new MongoClient(uri);
-    this.db = this.client.db(process.env.DB_NAME);
+    this.db = this.client.db(envConfig.dbName);
   }
 
   async connect() {
     try {
       // Send a ping to confirm a successful connection
-      await this.client.db(`${process.env.DB_NAME}`).command({ ping: 1 });
+      await this.client.db(`${envConfig.dbName}`).command({ ping: 1 });
       console.log('Pinged your deployment. You successfully connected to MongoDB!');
     } catch (error) {
       console.log(error);
@@ -40,7 +38,7 @@ class DatabaseService {
     await this.users.createIndex({ password: 1, email: 1 });
   }
   get users(): Collection<User> {
-    return this.db.collection(`${process.env.DB_USER_COLLECTION}`);
+    return this.db.collection(`${envConfig.dbUserCollection}`);
   }
 
   async indexRefreshToken() {
@@ -50,7 +48,7 @@ class DatabaseService {
     await this.refreshTokens.createIndex({ exp: 1 }, { expireAfterSeconds: 0 });
   }
   get refreshTokens(): Collection<RefreshToken> {
-    return this.db.collection(`${process.env.DB_REFRESH_TOKEN_COLLECTION}`);
+    return this.db.collection(`${envConfig.dbRefreshTokenCollection}`);
   }
 
   async indexFollower() {
@@ -59,7 +57,7 @@ class DatabaseService {
     await this.followers.createIndex({ user_id: 1, followed_user_id: 1 });
   }
   get followers(): Collection<Follower> {
-    return this.db.collection(`${process.env.DB_FOLLOWERS_COLLECTION}`);
+    return this.db.collection(`${envConfig.dbFollowersCollection}`);
   }
 
   async indexVideoStatus() {
@@ -68,7 +66,7 @@ class DatabaseService {
     await this.videoStatus.createIndex({ name: 1 });
   }
   get videoStatus(): Collection<VideoStatusSchema> {
-    return this.db.collection(`${process.env.DB_VIDEO_STATUS_COLLECTION}`);
+    return this.db.collection(`${envConfig.dbVideoStatusCollection}`);
   }
 
   async indexTweets() {
@@ -77,11 +75,11 @@ class DatabaseService {
     await this.tweets.createIndex({ content: 'text' }, { default_language: 'none' });
   }
   get tweets(): Collection<Tweet> {
-    return this.db.collection(`${process.env.DB_TWEETS_COLLECTION}`);
+    return this.db.collection(`${envConfig.dbTweetsCollection}`);
   }
 
   get hashtags(): Collection<Hashtag> {
-    return this.db.collection(`${process.env.DB_HASHTAGS_COLLECTION}`);
+    return this.db.collection(`${envConfig.dbHashtagsCollection}`);
   }
   async indexHashtags() {
     const exist = await this.hashtags.indexExists('name_1');
@@ -90,15 +88,15 @@ class DatabaseService {
   }
 
   get bookmarks(): Collection<Bookmark> {
-    return this.db.collection(`${process.env.DB_BOOKMARKS_COLLECTION}`);
+    return this.db.collection(`${envConfig.dbBookmarksCollection}`);
   }
 
   get likes(): Collection<Like> {
-    return this.db.collection(`${process.env.DB_LIKES_COLLECTION}`);
+    return this.db.collection(`${envConfig.dbLikesCollection}`);
   }
 
   get conversation(): Collection<Conversation> {
-    return this.db.collection(`${process.env.DB_CONVERSATIONS_COLLECTION}`);
+    return this.db.collection(`${envConfig.dbConversationsCollection}`);
   }
 }
 

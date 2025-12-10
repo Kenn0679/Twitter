@@ -13,6 +13,7 @@ import databaseService from '~/services/database.services';
 import userService from '~/services/users.services';
 import { verifyAccessToken } from '~/utils/common';
 import { hashPassword } from '~/utils/crypto';
+import envConfig from '~/utils/envConfig';
 import { verifyToken } from '~/utils/jwt';
 import validate from '~/utils/validation';
 
@@ -82,7 +83,7 @@ const forgotPasswordTokenSchema: ParamSchema = {
       try {
         const decoded_forgot_password_token = await verifyToken({
           token: value,
-          secretOrPublicKey: process.env.JWT_FORGOT_PASSWORD_SECRET as string
+          secretOrPublicKey: envConfig.jwtForgotPasswordSecret
         });
 
         if (!decoded_forgot_password_token) {
@@ -306,7 +307,7 @@ const refreshTokenValidator = validate(
             try {
               const [refresh_token] = await Promise.all([
                 databaseService.refreshTokens.findOne({ token: value }),
-                verifyToken({ token: value, secretOrPublicKey: process.env.JWT_REFRESH_SECRET as string })
+                verifyToken({ token: value, secretOrPublicKey: envConfig.jwtRefreshSecret as string })
               ]);
 
               if (!refresh_token) {
@@ -350,7 +351,7 @@ const emailVerifyTokenValidator = validate(
             }
             try {
               const [decoded_email_verify_token] = await Promise.all([
-                verifyToken({ token: value, secretOrPublicKey: process.env.JWT_EMAIL_SECRET as string }),
+                verifyToken({ token: value, secretOrPublicKey: envConfig.jwtEmailSecret }),
                 databaseService.users.findOne({ email_verify_token: value })
               ]);
 

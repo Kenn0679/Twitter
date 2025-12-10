@@ -23,9 +23,7 @@ import { USERS_MESSAGES } from '~/constants/messages';
 import databaseService from '~/services/database.services';
 import HTTP_STATUS from '~/constants/httpStatus';
 import { UserVerifyStatus } from '~/constants/enums';
-import { config } from 'dotenv';
-config();
-
+import envConfig from '~/utils/envConfig';
 const loginController = async (req: Request<core.ParamsDictionary, any, LoginRequestBody>, res: Response) => {
   const user = req.user as User;
   const user_id = user._id as ObjectId;
@@ -39,7 +37,7 @@ const loginController = async (req: Request<core.ParamsDictionary, any, LoginReq
 const oauthController = async (req: Request, res: Response) => {
   const { code } = req.query;
   const result = await usersService.oauth(code as string);
-  const urlRedirect = `${process.env.CLIENT_REDIRECT_CALLBACK}?access_token=${result.access_token}&refresh_token=${result.refresh_token}&new_user=${result.new_user}%&verify=${result.verify}`;
+  const urlRedirect = `${envConfig.clientRedirectCallback}?access_token=${result.access_token}&refresh_token=${result.refresh_token}&new_user=${result.new_user}%&verify=${result.verify}`;
   return res.redirect(urlRedirect);
 };
 

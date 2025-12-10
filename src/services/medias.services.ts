@@ -4,7 +4,6 @@ import sharp from 'sharp';
 import { UPLOAD_IMAGE_DIRECTORY, UPLOAD_VIDEO_DIRECTORY } from '~/constants/dir';
 import { getFiles, getNameFromFullName, handleUploadImage, handleUploadVideo } from '~/utils/File';
 import fs from 'fs';
-import { config } from 'dotenv';
 import { isProduction } from '~/constants/config';
 import { EncodingStatus, MediaType } from '~/constants/enums';
 import { Media } from '~/models/Others';
@@ -16,8 +15,7 @@ import { uploadFileToS3 } from '~/utils/s3';
 import mime from 'mime';
 import { CompleteMultipartUploadCommandOutput } from '@aws-sdk/client-s3';
 import { rimrafSync } from 'rimraf';
-
-config();
+import envConfig from '~/utils/envConfig';
 
 class Queue {
   items: string[];
@@ -167,8 +165,8 @@ class MediaService {
     queue.enqueue(files.filepath);
     return {
       url: isProduction
-        ? `${process.env.HOST}/static/videos-hls/${name}/master.m3u8`
-        : `${process.env.BASE_URL}/static/videos-hls/${name}/master.m3u8`,
+        ? `${envConfig.host}/static/videos-hls/${name}/master.m3u8`
+        : `${envConfig.baseUrl}/static/videos-hls/${name}/master.m3u8`,
       type: MediaType.HLS
     };
   }

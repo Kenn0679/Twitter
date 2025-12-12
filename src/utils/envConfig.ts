@@ -8,6 +8,8 @@ config({
   path: options.env ? `./.env.${options.env}` : './.env'
 });
 
+export const isProduction: boolean = options.env === 'production';
+
 const envConfig = {
   /*
     # ===================================

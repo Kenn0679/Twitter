@@ -6,7 +6,7 @@ import mediasRouter from './routes/medias.routes';
 import { initFolder } from './utils/File';
 import staticRoutes from './routes/static.routes';
 import { UPLOAD_VIDEO_DIRECTORY } from './constants/dir';
-import cors from 'cors';
+import cors, { CorsOptions } from 'cors';
 import tweetsRouter from './routes/tweets.routes';
 import bookmarksRouter from './routes/bookmarks.routes';
 import likesRouter from './routes/likes.routes';
@@ -16,7 +16,9 @@ import { initializeSocket } from './socket/socket';
 import conversationsRoutes from './routes/conversations.routes';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import envConfig from './utils/envConfig';
+import envConfig, { isProduction } from './utils/envConfig';
+import helmet from 'helmet';
+import { rateLimit } from 'express-rate-limit';
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -32,6 +34,17 @@ const openapiSpecification = swaggerJsdoc(options);
 
 const app = express();
 const PORT = envConfig.port;
+const corsOptions: CorsOptions = {
+  origin: isProduction ? envConfig.frontendUrl : '*'
+};
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes (in milliseconds)
+  limit: 5, // Limit each IP to 5 requests per `window` (here, per 10 minutes).
+  standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
+  message: 'Umm, you have made too many requests in a short period of time. Please try again later (after 10 minutes).'
+});
 
 const server = createServer(app);
 
@@ -47,7 +60,9 @@ server.listen(PORT, () => {
   console.log(`→ Socket.IO: ws://localhost:${PORT}`);
 });
 
-app.use(cors());
+app.use(helmet());
+app.use(cors(corsOptions));
+app.use(limiter);
 
 initFolder();
 

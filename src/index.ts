@@ -18,7 +18,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import envConfig, { isProduction } from './utils/envConfig';
 import helmet from 'helmet';
-import { rateLimit } from 'express-rate-limit';
+import { slowDown } from 'express-slow-down';
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -37,13 +37,12 @@ const PORT = envConfig.port;
 const corsOptions: CorsOptions = {
   origin: isProduction ? envConfig.frontendUrl : '*'
 };
-const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 10 minutes (in milliseconds)
-  limit: 5, // Limit each IP to 5 requests per `window` (here, per 10 minutes).
-  standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-  ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
-  message: 'Umm, you have made too many requests in a short period of time. Please try again later (after 10 minutes).'
+const limiter = slowDown({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  delayAfter: 5, // Allow 5 requests per 10 minutes.
+  delayMs: (hits) => hits * 3 * 60 * 1000, // Add 3 mins of delay to every request after the 5th one.
+  message:
+    'Umm... Slow down there! You are making too many requests in a short period of time. Try again after 3 minutes.'
 });
 
 const server = createServer(app);

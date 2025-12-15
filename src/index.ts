@@ -54,7 +54,7 @@ const io = initializeSocket(server);
 app.set('io', io);
 
 server.listen(PORT, () => {
-  console.log(`Server Express + Socket.IO đang chạy chung trên cổng ${PORT}`);
+  console.log(`Server Express + Socket.IO are running on port ${PORT}`);
   console.log(`→ REST API : http://localhost:${PORT}`);
   console.log(`→ Socket.IO: ws://localhost:${PORT}`);
 });

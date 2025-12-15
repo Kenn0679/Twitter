@@ -1,14 +1,28 @@
 import { config } from 'dotenv';
 import { StringValue } from 'ms';
-import argv from 'minimist';
+import fs from 'fs';
+import path from 'path';
 
-const options = argv(process.argv.slice(2));
+const env = (process.env.NODE_ENV || '').trim();
+console.log('Current Environment:', env || 'not set');
 
+if (!env) {
+  console.warn('No NODE_ENV set, exiting...');
+  console.warn('Please set NODE_ENV to one of the following values: development, production');
+  process.exit(1);
+}
+
+const envFilename = `.env.${env}`;
+if (!fs.existsSync(path.resolve(envFilename))) {
+  console.warn(`Environment file ${envFilename} not found; please create it.`);
+  console.warn('Exiting...');
+  process.exit(1);
+}
 config({
-  path: options.env ? `./.env.${options.env}` : './.env'
+  path: envFilename
 });
 
-export const isProduction: boolean = options.env === 'production';
+export const isProduction: boolean = env.startsWith('production');
 
 const envConfig = {
   /*

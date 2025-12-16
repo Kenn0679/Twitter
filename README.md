@@ -66,14 +66,15 @@ This is a **comprehensive, production-ready backend API** that faithfully replic
 
 **Rich content creation**
 
-- Create, read, update, delete tweets
+- Create tweets with media attachments
 - Support for hashtags with auto-detection
 - @mention system for user tagging
 - Media attachments (images & videos)
-- Audience targeting (public, circle, mentions-only)
-- Engagement metrics (likes, retweets, comments, quotes)
-- Automatic hashtag extraction and indexing
+- Audience targeting (public, Twitter Circle)
+- Tweet types (Tweet, Retweet, Comment, QuoteTweet)
 - View count tracking (authenticated & guest)
+- News feed with pagination
+- Tweet children (replies, retweets, quotes)
 
 </td>
 </tr>
@@ -88,8 +89,9 @@ This is a **comprehensive, production-ready backend API** that faithfully replic
 - Email verification with secure token generation
 - Password reset flow with time-limited tokens
 - OAuth 2.0 Google login integration
-- bcrypt password hashing with salt rounds
-- CORS and security middleware protection
+- Password hashing with custom secret
+- CORS and security middleware (Helmet)
+- Rate limiting with express-slow-down
 
 </td>
 <td width="50%" valign="top">
@@ -102,8 +104,9 @@ This is a **comprehensive, production-ready backend API** that faithfully replic
 - Avatar and cover photo management
 - Bio, location, website, and personal info
 - Username customization with validation
-- Public profile discovery
+- Public profile discovery by username
 - Account verification status
+- Get other users for chat functionality
 
 </td>
 </tr>
@@ -114,28 +117,51 @@ This is a **comprehensive, production-ready backend API** that faithfully replic
 
 **Build meaningful connections**
 
-- Follow/unfollow system with real-time updates
+- Follow/unfollow system
 - Twitter Circle (close friends feature)
-- Follower and following lists
-- User discovery and search
+- User discovery
 - Social graph management
 - Privacy controls
 
 </td>
 <td width="50%" valign="top">
 
-### 📝 **Tweet/Post System**
+### 💬 **Real-time Messaging**
 
-**Rich content creation**
+**Socket.IO powered chat**
 
-- Create, read, update, delete tweets
-- Support for hashtags with auto-detection
-- @mention system for user tagging
-- Media attachments (images & videos)
-- Audience targeting (public, circle, mentions-only)
-- Engagement metrics (likes, retweets, comments, quotes)
-- Automatic hashtag extraction and indexing
-- View count tracking (authenticated & guest)
+- Real-time private messaging
+- Typing indicators
+- Online/offline status tracking
+- Message status (sent, received, read)
+- Conversation management
+- User presence tracking
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🔖 **Bookmarks & Likes**
+
+**Content engagement**
+
+- Save tweets to bookmarks
+- Like/unlike tweets
+- Multiple ways to remove bookmarks/likes
+- Track user engagement
+
+</td>
+<td width="50%" valign="top">
+
+### 🔍 **Search Functionality**
+
+**Discover content**
+
+- Search tweets by content
+- Full-text search with MongoDB indexing
+- Paginated search results
+- Search users (planned)
 
 </td>
 </tr>
@@ -246,6 +272,7 @@ This is a **comprehensive, production-ready backend API** that faithfully replic
 - 📊 **MongoDB Driver** - Native Node.js driver
 - ☁️ **AWS S3** - Cloud object storage
 - 🔗 **AWS SDK** - S3 integration
+- 📧 **AWS SES** - Email service
 
 </td>
 <td width="33%" valign="top">
@@ -256,10 +283,21 @@ This is a **comprehensive, production-ready backend API** that faithfully replic
 - 🔒 **bcrypt** - Password hashing
 - 🛡️ **CORS** - Cross-origin security
 - 🔑 **OAuth 2.0** - Google authentication
+- 🛡️ **Helmet** - Security headers
+- ⏱️ **express-slow-down** - Rate limiting
 
 </td>
 </tr>
 <tr>
+<td width="33%" valign="top">
+
+#### **Real-time Communication**
+
+- ⚡ **Socket.IO** - Real-time bidirectional communication
+- 💬 **WebSocket** - Real-time chat & messaging
+- 🔔 **Event-driven architecture** - Socket event handlers
+
+</td>
 <td width="33%" valign="top">
 
 #### **Media Processing**
@@ -279,7 +317,18 @@ This is a **comprehensive, production-ready backend API** that faithfully replic
 - 🧰 **Lodash** - Utility library
 - 🌐 **Axios** - HTTP client
 - 🔧 **dotenv** - Environment variables
-- 📝 **uuid** - Unique ID generation
+- 📝 **nanoid** - Unique ID generation
+
+</td>
+</tr>
+<tr>
+<td width="33%" valign="top">
+
+#### **API Documentation**
+
+- 📚 **Swagger/OpenAPI** - API documentation
+- 🔍 **swagger-jsdoc** - Generate API docs
+- 🎨 **swagger-ui-express** - Interactive API explorer
 
 </td>
 <td width="33%" valign="top">
@@ -288,9 +337,17 @@ This is a **comprehensive, production-ready backend API** that faithfully replic
 
 - 🔍 **ESLint** - Code quality linting
 - 💅 **Prettier** - Code formatting
-- 🔨 **ts-node** - TypeScript execution
+- 🔨 **tsx** - TypeScript execution
 - ⚙️ **tsc-alias** - Path alias resolution
 - 📦 **npm** - Package management
+
+</td>
+<td width="33%" valign="top">
+
+#### **Template Engine**
+
+- 📧 **Handlebars** - Email template engine
+- 🎨 **Email templates** - Verification & reset emails
 
 </td>
 </tr>
@@ -315,35 +372,60 @@ graph TD
     B --> B3[Regex Patterns]
     B --> B4[Error Messages]
 
+    A --> I[socket/]
+    
     C --> C1[User Controller]
     C --> C2[Media Controller]
-    C --> C3[Auth Controller]
-    C --> C4[Tweet Controller]
+    C --> C3[Tweet Controller]
+    C --> C4[Bookmark Controller]
+    C --> C5[Like Controller]
+    C --> C6[Search Controller]
+    C --> C7[Conversation Controller]
 
     D --> D1[Validation Middleware]
     D --> D2[Auth Middleware]
     D --> D3[Error Handler]
-    D --> D4[File Upload Handler]
+    D --> D4[Socket Middleware]
 
     E --> E1[User Schema]
     E --> E2[RefreshToken Schema]
     E --> E3[Follower Schema]
     E --> E4[Tweet Schema]
+    E --> E5[Bookmark Schema]
+    E --> E6[Like Schema]
+    E --> E7[Conversation Schema]
+    E --> E8[Hashtag Schema]
+    E --> E9[Video Status Schema]
 
     F --> F1[User Routes]
     F --> F2[Media Routes]
-    F --> F3[Auth Routes]
-    F --> F4[Tweet Routes]
+    F --> F3[Tweet Routes]
+    F --> F4[Bookmark Routes]
+    F --> F5[Like Routes]
+    F --> F6[Search Routes]
+    F --> F7[Conversation Routes]
+    F --> F8[Static Routes]
 
     G --> G1[Database Service]
     G --> G2[User Service]
     G --> G3[Media Service]
     G --> G4[Tweet Service]
+    G --> G5[Bookmark Service]
+    G --> G6[Like Service]
+    G --> G7[Search Service]
+    G --> G8[Conversation Service]
 
     H --> H1[JWT Utils]
     H --> H2[Crypto Utils]
     H --> H3[File Handler]
     H --> H4[Validators]
+    H --> H5[Email Utils]
+    H --> H6[Video Utils]
+
+    I --> I1[Socket Handler]
+    I --> I2[Socket Middleware]
+    I --> I3[Message Handler]
+    I --> I4[User Handler]
 ```
 
 ### **📂 Directory Structure**
@@ -352,11 +434,12 @@ graph TD
 | ------------------ | --------------------- | --------------------------------------------------- |
 | **`constants/`**   | 🎯 Configuration      | Enums, status codes, regex patterns, error messages |
 | **`controllers/`** | 🎮 Request Handling   | HTTP request/response logic, data transformation    |
-| **`middlewares/`** | 🛡️ Request Processing | Validation, authentication, error handling, uploads |
+| **`middlewares/`** | 🛡️ Request Processing | Validation, authentication, error handling, socket auth |
 | **`models/`**      | 🗃️ Data Schemas       | MongoDB document structures, data models            |
 | **`routes/`**      | 🛣️ API Endpoints      | Route definitions, endpoint mappings                |
 | **`services/`**    | ⚙️ Business Logic     | Core application logic, database operations         |
-| **`utils/`**       | 🔧 Helper Functions   | JWT, crypto, file handling, reusable utilities      |
+| **`utils/`**       | 🔧 Helper Functions   | JWT, crypto, file handling, email, video utilities |
+| **`socket/`**      | ⚡ Real-time          | Socket.IO handlers, middleware, message management |
 
 ---
 
@@ -409,28 +492,45 @@ Open `.env` and fill in your actual values:
 # ========================================
 # SERVER CONFIGURATION
 # ========================================
-PORT=4000
-BASE_URL=http://localhost:4000
+PORT=5000
+BASE_URL=http://localhost:5000
+HOST=localhost
+FRONTEND_URL=http://localhost:3000
+PROJECT_NAME=Twitter Clone
 
 # ========================================
 # DATABASE CONFIGURATION (MongoDB Atlas)
 # ========================================
-DB_USER=your-mongodb-username           # ⚠️ Required
-DB_PASS=your-mongodb-password           # ⚠️ Required
+DB_USER=your-mongodb-username                                # ⚠️ Required
+DB_PASS=your-mongodb-password                               # ⚠️ Required
 DB_NAME=twitter_clone
 DB_USER_COLLECTION=users
 DB_REFRESH_TOKEN_COLLECTION=refresh_tokens
 DB_FOLLOWERS_COLLECTION=followers
 DB_TWEETS_COLLECTION=tweets
 DB_HASHTAGS_COLLECTION=hashtags
+DB_BOOKMARKS_COLLECTION=bookmarks
+DB_LIKES_COLLECTION=likes
+DB_CONVERSATIONS_COLLECTION=conversations
+DB_VIDEO_STATUS_COLLECTION=video_status
 
 # ========================================
 # JWT SECRETS (Generate Strong Random Keys)
 # ========================================
-JWT_SECRET=your-super-secret-jwt-key                        # ⚠️ Required
-JWT_SECRET_REFRESH_TOKEN=your-super-secret-refresh-key      # ⚠️ Required
-JWT_SECRET_EMAIL_VERIFY_TOKEN=your-email-verify-secret      # ⚠️ Required
-JWT_SECRET_FORGOT_PASSWORD_TOKEN=your-forgot-password-secret # ⚠️ Required
+JWT_SECRET=your-super-secret-jwt-key                        # ⚠️ Required (legacy)
+JWT_ACCESS_SECRET=your-access-token-secret                  # ⚠️ Required
+JWT_REFRESH_SECRET=your-refresh-token-secret                # ⚠️ Required
+JWT_EMAIL_SECRET=your-email-verify-secret                    # ⚠️ Required
+JWT_VERIFY_EMAIL_SECRET=your-verify-email-secret            # ⚠️ Required
+JWT_FORGOT_PASSWORD_SECRET=your-forgot-password-secret       # ⚠️ Required
+
+# ========================================
+# JWT TOKEN EXPIRATION
+# ========================================
+ACCESS_TOKEN_EXPIRE=15m                                     # Access token expiration
+REFRESH_TOKEN_EXPIRE=30d                                    # Refresh token expiration
+EMAIL_VERIFY_TOKEN_EXPIRE=1d                                # Email verification token expiration
+FORGOT_PASSWORD_TOKEN_EXPIRE=15m                            # Password reset token expiration
 
 # ========================================
 # SECURITY
@@ -443,14 +543,19 @@ PASSWORD_SECRET=your-password-hash-secret                   # ⚠️ Required
 AWS_ACCESS_KEY_ID=your-aws-access-key                       # ⚠️ Required
 AWS_SECRET_ACCESS_KEY=your-aws-secret-key                   # ⚠️ Required
 AWS_REGION=us-east-1                                        # ⚠️ Required
-AWS_S3_BUCKET_NAME=your-bucket-name                         # ⚠️ Required
+BUCKET_NAME=your-bucket-name                                # ⚠️ Required
+
+# ========================================
+# AWS SES CONFIGURATION (Email)
+# ========================================
+SES_FROM_ADDRESS=noreply@yourdomain.com                     # ⚠️ Required
 
 # ========================================
 # OAUTH CONFIGURATION (Optional)
 # ========================================
 GOOGLE_CLIENT_ID=your-google-client-id                      # Optional
-GOOGLE_CLIENT_SECRET=your-google-client-secret              # Optional
-GOOGLE_REDIRECT_URI=http://localhost:4000/users/oauth/google
+GOOGLE_CLIENT_SECRET=your-google-client-secret             # Optional
+GOOGLE_REDIRECT_URI=http://localhost:5000/users/oauth/google
 CLIENT_REDIRECT_CALLBACK=http://localhost:3000/login/oauth
 ```
 
@@ -507,9 +612,14 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 | Category               | Endpoints | Description                              |
 | ---------------------- | --------- | ---------------------------------------- |
 | 🔐 **Authentication**  | 11 routes | Login, register, OAuth, token management |
-| 👤 **User Management** | 6 routes  | Profile CRUD, follow system, discovery   |
-| 📝 **Tweet System**    | 8 routes  | Create, read, update, delete tweets      |
-| 📸 **Media Upload**    | 2 routes  | Image and video upload with streaming    |
+| 👤 **User Management** | 7 routes  | Profile CRUD, follow system, discovery   |
+| 📝 **Tweet System**    | 4 routes  | Create, read, news feed, children        |
+| 📸 **Media Upload**    | 4 routes  | Image/video upload, HLS, video status    |
+| 🔖 **Bookmarks**       | 3 routes  | Create, delete bookmarks                |
+| ❤️ **Likes**           | 3 routes  | Like/unlike tweets                       |
+| 🔍 **Search**          | 1 route   | Search tweets and users                  |
+| 💬 **Conversations**   | 2 routes  | Get messages, conversations              |
+| 📁 **Static Files**    | 4 routes  | Serve images, videos, HLS streams        |
 
 </div>
 
@@ -569,6 +679,7 @@ GET    /oauth/google           # Google OAuth login
 GET    /me                     # Get current user
 PATCH  /me                     # Update profile
 GET    /:username              # Get user by username
+GET    /other                  # Get other user (for chat)
 ```
 
 </td>
@@ -579,7 +690,7 @@ GET    /:username              # Get user by username
 ```
 POST   /follow                 # Follow a user
 DELETE /follow/:user_id        # Unfollow a user
-GET    /followers              # Get followers list
+PUT    /change-password        # Change password
 ```
 
 </td>
@@ -589,36 +700,87 @@ GET    /followers              # Get followers list
 ### **📝 Tweet Routes** (`/tweets`)
 
 ```
-POST   /tweets                 # Create new tweet
-GET    /tweets/:id             # Get tweet by ID
-GET    /tweets                 # Get tweet feed (paginated)
-DELETE /tweets/:id             # Delete tweet
-POST   /tweets/:id/like        # Like a tweet
-DELETE /tweets/:id/like        # Unlike a tweet
-POST   /tweets/:id/retweet     # Retweet
-GET    /tweets/user/:username  # Get user's tweets
+POST   /                       # Create new tweet
+GET    /                       # Get news feed (paginated)
+GET    /:tweet_id              # Get tweet by ID
+GET    /:tweet_id/children     # Get tweet children (replies, retweets, quotes)
+                               # Query params: type, limit, page
 ```
 
 ### **📸 Media Routes** (`/medias`)
-
-<table>
-<tr>
-<td width="100%" valign="top">
-
-#### **🖼️ Media Upload & Streaming**
 
 ```
 POST   /upload-image           # Upload image to S3
                                # Returns: S3 public URL
 
-POST   /upload-video           # Upload video to S3 with HLS transcoding
+POST   /upload-video           # Upload video to S3
+                               # Returns: S3 video URL
+
+POST   /upload-video-hls      # Upload video with HLS transcoding
                                # Returns: HLS master playlist URL
                                # Supports: Adaptive bitrate streaming
+
+GET    /video-status/:id      # Get video encoding status
 ```
 
-</td>
-</tr>
-</table>
+### **🔖 Bookmark Routes** (`/bookmarks`)
+
+```
+POST   /                       # Create bookmark
+DELETE /tweets/:tweet_id       # Remove bookmark by tweet ID
+DELETE /:bookmark_id          # Remove bookmark by bookmark ID
+```
+
+### **❤️ Like Routes** (`/likes`)
+
+```
+POST   /                       # Like a tweet
+DELETE /tweets/:tweet_id       # Unlike by tweet ID
+DELETE /:like_id               # Unlike by like ID
+```
+
+### **🔍 Search Routes** (`/search`)
+
+```
+GET    /                       # Search tweets and users
+                               # Query params: content, limit, page
+```
+
+### **💬 Conversation Routes** (`/conversations`)
+
+```
+GET    /:conversationId        # Get messages in conversation
+                               # Query params: limit, page
+
+GET    /recipient/:recipientId # Get or create conversation with recipient
+                               # Query params: limit, page
+```
+
+### **📁 Static Routes** (`/static`)
+
+```
+GET    /images/:name           # Serve uploaded images
+GET    /videos-stream/:name    # Stream video files
+GET    /videos-hls/:id/master.m3u8        # HLS master playlist
+GET    /videos-hls/:id/:v/:segment         # HLS video segments
+```
+
+### **⚡ Socket.IO Events**
+
+```
+Connection Events:
+- connection              # User connects
+- disconnect             # User disconnects
+
+Message Events:
+- private_message        # Send private message
+- typing                 # Typing indicator
+- client_message         # Client message event
+
+User Events:
+- user_online            # User comes online
+- user_offline           # User goes offline
+```
 
 ### **📊 API Response Examples**
 
@@ -814,8 +976,68 @@ sequenceDiagram
   _id: ObjectId,
   token: string,
   user_id: ObjectId,
-  created_at: Date,
+  iat: number,
   exp: number
+}
+```
+
+### **Bookmark Model**
+
+```typescript
+{
+  _id: ObjectId,
+  user_id: ObjectId,
+  tweet_id: ObjectId,
+  created_at: Date
+}
+```
+
+### **Like Model**
+
+```typescript
+{
+  _id: ObjectId,
+  user_id: ObjectId,
+  tweet_id: ObjectId,
+  created_at: Date
+}
+```
+
+### **Conversation Model**
+
+```typescript
+{
+  _id: ObjectId,
+  conversationId: ObjectId,
+  senderId: ObjectId,
+  recipientId: ObjectId,
+  message: string,
+  timestamp: Date,
+  status: MessageStatus, // SENT | RECEIVED | READ
+  created_at: Date,
+  updated_at: Date
+}
+```
+
+### **Hashtag Model**
+
+```typescript
+{
+  _id: ObjectId,
+  name: string,
+  created_at: Date
+}
+```
+
+### **Video Status Model**
+
+```typescript
+{
+  _id: ObjectId,
+  name: string,
+  status: EncodingStatus, // PENDING | PROCESSING | SUCCESSFULLY | FAILED
+  created_at: Date,
+  updated_at: Date
 }
 ```
 
@@ -823,24 +1045,35 @@ sequenceDiagram
 
 ## **🚧 Roadmap & Future Enhancements**
 
+### **✅ Completed Features**
+
+- ✅ Real-time messaging with Socket.IO
+- ✅ Bookmark system
+- ✅ Like/unlike system
+- ✅ Search functionality
+- ✅ Rate limiting with express-slow-down
+- ✅ Video HLS streaming
+- ✅ Email verification system
+- ✅ Password reset flow
+
 ### **🔄 In Progress**
 
 - 🔔 Notification system (real-time)
-- 💬 Direct messaging functionality
-- 🚦 Rate limiting for all endpoints
 - 📄 Advanced pagination with cursor-based approach
 - 🧪 Unit and integration test coverage
 
 ### **🎯 Planned Features**
 
 - 📊 Analytics dashboard
-- 🔍 Advanced search (full-text search)
+- 🔍 Advanced search filters (users, tweets, hashtags)
 - 📱 Push notifications
 - 🌐 Multi-language support
 - 🎨 Themes and customization
 - 📈 Trending topics algorithm
 - 🤖 Content moderation tools
 - 📽️ Live streaming support
+- 🔄 Retweet functionality
+- 💬 Quote tweet functionality
 
 ## **🙏 Acknowledgments**
 

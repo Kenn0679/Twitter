@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  twitter:
+    image: 'ken/twitter:v0'
+    ports:
+      - '5000:5000'
+# you can use this file to run a local instance of twitter service for development or testing purposes
+# make sure to have Docker installed and run `docker-compose up` in the directory containing this file
+# If there're errors related to cache, add '--force-recreate build'
+# this compose equal to:
+# docker run -dp 5000:5000 ken/twitter:v0
+# like I mentioned in Dockerfile.dev, you can also add volume mapping for development purpose
+# for example:
+#    volumes: (must be indented properly)
+#      - '~/Documents/NodeJs/Twitter/uploads:/app/uploads'

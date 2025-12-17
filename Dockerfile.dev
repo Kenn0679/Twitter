@@ -17,3 +17,13 @@ RUN npm run build
 EXPOSE 5000
 
 CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+# docker build --progress=plain -t YOUR_IMAGE_NAME(Ex: ken/twitter:v0) -f ./Dockerfile.dev .
+# if there're error related to cache, try adding --no-cache option
+# if you want to build a container too:
+# docker container run -dp PORT_HOST:PORT_CONTAINER IMAGE_NAME
+# Example: docker container run -dp 5000:5000 ken/twitter:v0
+# You still can use something like 5000:4000 but normally no one does that unless there's a specific reason
+# with volume mapping for development:
+  # docker container run -dp 4000:4000 -v ~/Documents/NodeJs/Twitter/uploads:/app/uploads dev/twitter:v2
+  # In this case, uploads folder locally is mapped to uploads folder in the container
+  # but my project already upload the file to S3, so I don't need to do that

@@ -373,7 +373,7 @@ graph TD
     B --> B4[Error Messages]
 
     A --> I[socket/]
-    
+
     C --> C1[User Controller]
     C --> C2[Media Controller]
     C --> C3[Tweet Controller]
@@ -430,16 +430,16 @@ graph TD
 
 ### **📂 Directory Structure**
 
-| Directory          | Purpose               | Key Responsibilities                                |
-| ------------------ | --------------------- | --------------------------------------------------- |
-| **`constants/`**   | 🎯 Configuration      | Enums, status codes, regex patterns, error messages |
-| **`controllers/`** | 🎮 Request Handling   | HTTP request/response logic, data transformation    |
+| Directory          | Purpose               | Key Responsibilities                                    |
+| ------------------ | --------------------- | ------------------------------------------------------- |
+| **`constants/`**   | 🎯 Configuration      | Enums, status codes, regex patterns, error messages     |
+| **`controllers/`** | 🎮 Request Handling   | HTTP request/response logic, data transformation        |
 | **`middlewares/`** | 🛡️ Request Processing | Validation, authentication, error handling, socket auth |
-| **`models/`**      | 🗃️ Data Schemas       | MongoDB document structures, data models            |
-| **`routes/`**      | 🛣️ API Endpoints      | Route definitions, endpoint mappings                |
-| **`services/`**    | ⚙️ Business Logic     | Core application logic, database operations         |
-| **`utils/`**       | 🔧 Helper Functions   | JWT, crypto, file handling, email, video utilities |
-| **`socket/`**      | ⚡ Real-time          | Socket.IO handlers, middleware, message management |
+| **`models/`**      | 🗃️ Data Schemas       | MongoDB document structures, data models                |
+| **`routes/`**      | 🛣️ API Endpoints      | Route definitions, endpoint mappings                    |
+| **`services/`**    | ⚙️ Business Logic     | Core application logic, database operations             |
+| **`utils/`**       | 🔧 Helper Functions   | JWT, crypto, file handling, email, video utilities      |
+| **`socket/`**      | ⚡ Real-time          | Socket.IO handlers, middleware, message management      |
 
 ---
 
@@ -584,6 +584,25 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 > ⚠️ **Security Note:** Never commit `.env` to version control! It's already in `.gitignore`.
 
+#### **Docker Deployment Note**
+
+**About Environment Files in Docker:**
+
+- **Private Repository**: If your repository is private, you can safely copy environment files into the Docker image (as shown in [Dockerfile.dev](./Dockerfile.dev)):
+
+  ```dockerfile
+  COPY .env.development ./
+  ```
+
+- **Public Repository**: If your repository is public, **DO NOT** copy environment files into the image. Instead, pass variables at runtime:
+  ```bash
+  docker run -dp 5000:5000 --env-file .env.development your-image-name
+  # Or use individual -e flags
+  docker run -dp 5000:5000 -e DB_USER=... -e DB_PASS=... your-image-name
+  ```
+
+This project uses a **private repository**, so the environment file is copied directly into the Docker image for convenience. Always evaluate your repository's privacy level before choosing this approach.
+
 ### **📜 Available Scripts**
 
 <div align="center">
@@ -603,7 +622,125 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ---
 
-## **📡 API Documentation**
+## **� Docker Deployment**
+
+### **Quick Start with Docker**
+
+Docker containerizes your application for consistent deployment across different environments.
+
+#### **Build Docker Image**
+
+```bash
+# Build from Dockerfile.dev (development)
+docker build --progress=plain -t ken/twitter:v0 -f ./Dockerfile.dev .
+
+# Build from Dockerfile (production)
+docker build --progress=plain -t ken/twitter:v0 .
+
+# If you encounter cache-related errors, add --no-cache
+docker build --progress=plain --no-cache -t ken/twitter:v0 -f ./Dockerfile.dev .
+```
+
+#### **Run Container**
+
+```bash
+# Basic: Run with port mapping (5000 container → 5000 host)
+docker container run -dp 5000:5000 ken/twitter:v0
+
+# Run with different host port (5500 host → 5000 container)
+docker container run -dp 5500:5000 ken/twitter:v0
+
+# Note: Format is always external_port:internal_port
+# Most projects use the same port on both sides unless there's a specific reason
+```
+
+#### **View Container Logs**
+
+```bash
+# List running containers
+docker ps
+
+# View logs
+docker logs <container_id>
+
+# Follow logs in real-time
+docker logs -f <container_id>
+
+# Get full container ID
+docker ps -a
+```
+
+### **Volume Mapping (For Development)**
+
+If you need to sync local files with container files during development:
+
+```bash
+# Example: Map local uploads folder to container uploads folder
+docker container run -dp 5000:5000 \
+  -v ~/Documents/NodeJS/Twitter/uploads:/app/uploads \
+  ken/twitter:v0
+
+# Note: This project uploads files to S3, so volume mapping is optional
+```
+
+### **Docker Compose (Optional)**
+
+For multi-service deployment (app + database), use Docker Compose:
+
+```yaml
+version: '3.9'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - '5000:5000'
+    env_file:
+      - .env.development
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - mongodb
+    networks:
+      - twitter-network
+
+  mongodb:
+    image: mongo:6.0
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    ports:
+      - '27017:27017'
+    networks:
+      - twitter-network
+
+networks:
+  twitter-network:
+    driver: bridge
+```
+
+Run with:
+
+```bash
+docker-compose up -d
+```
+
+### **Important Notes**
+
+⚠️ **Private Repository**: This project copies `.env.development` into the Docker image (see [Dockerfile.dev](./Dockerfile.dev)). This is safe because the repository is private. **Do not do this in public repositories.**
+
+⚠️ **Port Mapping Format**: Always use `external_port:internal_port`. The Dockerfile `EXPOSE 5000` defines the container's internal port.
+
+⚠️ **Database Connection**: MongoDB must be accessible from the container. Use MongoDB Atlas (cloud) for easier access, or run MongoDB in another container with Docker Compose.
+
+⚠️ **Cache Issues**: If the build fails with cache errors, add `--no-cache` flag to rebuild from scratch.
+
+> 📖 For more Docker information, see the official [Docker documentation](https://docs.docker.com/), [Dockerfile](./Dockerfile), or [Dockerfile.dev](./Dockerfile.dev)
+
+---
+
+## **�📡 API Documentation**
 
 <div align="center">
 
@@ -615,7 +752,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 | 👤 **User Management** | 7 routes  | Profile CRUD, follow system, discovery   |
 | 📝 **Tweet System**    | 4 routes  | Create, read, news feed, children        |
 | 📸 **Media Upload**    | 4 routes  | Image/video upload, HLS, video status    |
-| 🔖 **Bookmarks**       | 3 routes  | Create, delete bookmarks                |
+| 🔖 **Bookmarks**       | 3 routes  | Create, delete bookmarks                 |
 | ❤️ **Likes**           | 3 routes  | Like/unlike tweets                       |
 | 🔍 **Search**          | 1 route   | Search tweets and users                  |
 | 💬 **Conversations**   | 2 routes  | Get messages, conversations              |

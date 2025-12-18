@@ -652,7 +652,104 @@ docker container run -dp 5500:5000 ken/twitter:v0
 
 # Note: Format is always external_port:internal_port
 # Most projects use the same port on both sides unless there's a specific reason
+
 ```
+
+#### **Docker Hub**
+
+Share your image on Docker Hub for easy distribution and team collaboration.
+
+##### **Step 1: Create Docker Hub Account**
+
+1. Go to [Docker Hub](https://hub.docker.com/)
+2. Click **Sign Up** and create a free account
+3. Verify your email
+4. Create a repository (e.g., `twitter-clone-api`)
+
+##### **Step 2: Login to Docker Hub**
+
+```bash
+# Login to Docker Hub (will prompt for credentials)
+docker login
+
+# Verify login
+docker logout  # You can logout anytime
+```
+
+##### **Step 3: Tag Your Image**
+
+Before pushing, tag your image with your Docker Hub username:
+
+```bash
+# Format: docker tag <local-image> <username>/<repository>:<tag>
+
+# Example:
+docker tag ken/twitter:v0 kenn0679/twitter-clone-project:latest
+docker tag ken/twitter:v0 kenn0679/twitter-clone-project:v1.0.0
+```
+
+##### **Step 4: Push to Docker Hub**
+
+```bash
+# Push latest version
+docker push kenn0679/twitter-clone-api:latest
+
+# Push specific version
+docker push kenn0679/twitter-clone-api:v1.0.0
+
+# Push all tags
+docker push kenn0679/twitter-clone-api
+```
+
+##### **Step 5: Pull and Run from Docker Hub**
+
+Anyone can now pull and run your image:
+
+```bash
+# Pull image from Docker Hub
+docker pull kenn0679/twitter-clone-api:latest
+
+# Run from Docker Hub image
+docker container run -dp 5000:5000 kenn0679/twitter-clone-api:latest
+
+# Run with environment variables from .env file
+docker container run -dp 5000:5000 \
+  --env-file .env.production \
+  kenn0679/twitter-clone-api:latest
+```
+
+##### **Docker Hub Best Practices**
+
+| Practice                    | Benefit                              |
+| --------------------------- | ------------------------------------ |
+| Use semantic versioning     | Easy version tracking (v1.0.0, v2.1) |
+| Add descriptive tags        | `latest`, `stable`, `dev`            |
+| Update README on Docker Hub | Helps users understand the image     |
+| Keep images small           | Faster download and deployment       |
+| Use `.dockerignore`         | Exclude unnecessary files from build |
+| Scan images for CVEs        | Docker Hub scans for vulnerabilities |
+
+##### **Docker Hub Tips**
+
+```bash
+# View local images
+docker images
+
+# View all versions you've pushed
+docker pull --all-tags kenn0679/twitter-clone-api
+
+# Delete local image
+docker rmi kenn0679/twitter-clone-api:v1.0.0
+
+# Get image info
+docker inspect kenn0679/twitter-clone-api:latest
+
+# Pull specific version (always use tags in production)
+docker pull kenn0679/twitter-clone-api:v1.0.0  # ✅ Safe for production
+docker pull kenn0679/twitter-clone-api         # ⚠️ Pulls 'latest' (may break)
+```
+
+> 💡 **Tip**: Always specify image versions in production. Using `latest` can cause unexpected updates.
 
 #### **View Container Logs**
 

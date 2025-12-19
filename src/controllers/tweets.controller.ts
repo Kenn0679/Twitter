@@ -70,3 +70,20 @@ export const getNewsFeedTweetsController = async (
     data: { ...result, limit, page }
   });
 };
+
+export const getLikedTweetsController = async (req: Request<ParamsDictionary, any, any, Pagination>, res: Response) => {
+  const user_id = req.decoded_authorization?.user_id as string;
+  const limit = Number(req.query.limit);
+  const page = Number(req.query.page);
+
+  const result = await tweetsService.getLikedTweets({
+    user_id,
+    limit,
+    page
+  });
+
+  res.json({
+    message: TWEET_MESSAGES.LIKED_TWEETS_FETCHED_SUCCESSFULLY,
+    data: { ...result, limit, page }
+  });
+};

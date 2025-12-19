@@ -103,7 +103,8 @@ export const TWEET_MESSAGES = {
   TWEET_UNLIKED_SUCCESSFULLY: 'Tweet unliked successfully',
   TWEET_CHILDREN_FETCHED_SUCCESSFULLY: 'Tweet children fetched successfully',
   NEW_FEED_TWEETS_FETCHED_SUCCESSFULLY: 'New feed tweets fetched successfully',
-  TWEET_PAGE_MUST_BE_GREATER_THAN_ZERO: 'Page number must be greater than zero'
+  TWEET_PAGE_MUST_BE_GREATER_THAN_ZERO: 'Page number must be greater than zero',
+  LIKED_TWEETS_FETCHED_SUCCESSFULLY: 'Liked tweets fetched successfully'
 };
 
 export const BOOKMARK_MESSAGES = {

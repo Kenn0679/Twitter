@@ -490,6 +490,62 @@ class TweetsService {
       totalPage: Math.ceil(total[0].total / limit)
     };
   }
+
+  async getLikedTweets({ user_id, limit, page }: { user_id: string; limit: number; page: number }) {
+    const userId_ObjectID = new ObjectId(user_id);
+    const likedTweetsPipeline = [
+      {
+        $lookup: {
+          from: 'likes',
+          localField: '_id',
+          foreignField: 'tweet_id',
+          as: 'liked_tweets'
+        }
+      },
+      {
+        $match: {
+          liked_tweets: {
+            $elemMatch: {
+              user_id: userId_ObjectID
+            }
+          }
+        }
+      }
+    ];
+
+    const [tweets, totalResult] = await Promise.all([
+      await databaseService.tweets
+        .aggregate([
+          ...likedTweetsPipeline,
+          {
+            $skip: limit * (page - 1)
+          },
+          {
+            $limit: limit
+          },
+          {
+            $project: {
+              liked_tweets: 0
+            }
+          }
+        ])
+        .toArray(),
+      await databaseService.tweets
+        .aggregate([
+          ...likedTweetsPipeline,
+          {
+            $count: 'total'
+          }
+        ])
+        .toArray()
+    ]);
+
+    const total = totalResult[0]?.total || 0;
+    return {
+      tweets,
+      totalPage: Math.ceil(total / limit)
+    };
+  }
 }
 
 const tweetsService = new TweetsService();

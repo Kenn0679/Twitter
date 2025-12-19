@@ -3,7 +3,8 @@ import {
   createTweetController,
   getTweetController,
   getTweetChildrenController,
-  getNewsFeedTweetsController
+  getNewsFeedTweetsController,
+  getLikedTweetsController
 } from '~/controllers/tweets.controller';
 import {
   audienceValidator,
@@ -27,6 +28,22 @@ tweetsRouter.post(
   createTweetValidator,
   wrapRequestHandler(createTweetController)
 );
+//get new feed tweets
+tweetsRouter.get(
+  '/',
+  paginationValidator,
+  accessTokenValidator,
+  verifiedUserValidator,
+  wrapRequestHandler(getNewsFeedTweetsController)
+);
+//get list tweets you have liked
+tweetsRouter.get(
+  '/liked-tweets',
+  paginationValidator,
+  accessTokenValidator,
+  verifiedUserValidator,
+  wrapRequestHandler(getLikedTweetsController)
+);
 //get tweet details
 tweetsRouter.get(
   '/:tweet_id',
@@ -46,13 +63,5 @@ tweetsRouter.get(
   isUserLoginValidator(verifiedUserValidator),
   audienceValidator,
   wrapRequestHandler(getTweetChildrenController)
-);
-//get new feed tweets
-tweetsRouter.get(
-  '/',
-  paginationValidator,
-  accessTokenValidator,
-  verifiedUserValidator,
-  wrapRequestHandler(getNewsFeedTweetsController)
 );
 export default tweetsRouter;
